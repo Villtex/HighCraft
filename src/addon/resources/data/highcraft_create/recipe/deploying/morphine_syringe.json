@@ -1,0 +1,16 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "highcraft:empty_syringe"
+    },
+    {
+      "item": "highcraft:morphine"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:morphine_syringe"
+    }
+  ]
+}

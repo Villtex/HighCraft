@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "highcraft:lsd_blotter"
+    },
+    "title": {
+      "translate": "advancements.highcraft.lsd.title"
+    },
+    "description": {
+      "translate": "advancements.highcraft.lsd.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "acid": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": {
+        "effects": {
+          "highcraft:acid": {}
+        }
+      }
+    }
+  },
+  "parent": "highcraft:trip"
+}

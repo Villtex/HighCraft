@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "highcraft:cannabis_bud",
+    "highcraft:tobacco_leaf",
+    "highcraft:coca_leaves",
+    "highcraft:poppy_pod"
+  ]
+}

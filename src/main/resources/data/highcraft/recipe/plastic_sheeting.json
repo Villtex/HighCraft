@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "KKK",
+    "KKK"
+  ],
+  "key": {
+    "K": {
+      "item": "minecraft:dried_kelp"
+    }
+  },
+  "result": {
+    "id": "highcraft:plastic_sheeting",
+    "count": 16
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "highcraft:block/lab_tile_slab"
+    },
+    "type=top": {
+      "model": "highcraft:block/lab_tile_slab_top"
+    },
+    "type=double": {
+      "model": "highcraft:block/lab_tiles"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "highcraft:grinding",
+  "ingredients": [
+    {
+      "item": "minecraft:bone",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "minecraft:bone_meal",
+    "count": 5
+  },
+  "processing_time": 80
+}

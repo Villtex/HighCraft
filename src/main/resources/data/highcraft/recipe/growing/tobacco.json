@@ -1,0 +1,32 @@
+{
+  "type": "highcraft:growing",
+  "seed": {
+    "item": "highcraft:tobacco_seeds"
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "highcraft:tobacco_leaf",
+        "count": 4
+      },
+      "chance": 1.0
+    },
+    {
+      "item": {
+        "id": "highcraft:tobacco_seeds",
+        "count": 1
+      },
+      "chance": 1.0
+    },
+    {
+      "item": {
+        "id": "highcraft:tobacco_seeds",
+        "count": 1
+      },
+      "chance": 0.3
+    }
+  ],
+  "display_block": "highcraft:tobacco_crop",
+  "growth_time": 2400,
+  "water": 250
+}

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#highcraft:spawns_wild_tobacco",
+  "features": "highcraft:wild_tobacco_patch",
+  "step": "vegetal_decoration"
+}

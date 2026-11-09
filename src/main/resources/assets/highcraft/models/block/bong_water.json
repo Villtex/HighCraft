@@ -1,0 +1,70 @@
+{
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "particle": "highcraft:block/bong_water",
+    "water": "highcraft:block/bong_water"
+  },
+  "elements": [
+    {
+      "from": [
+        4.5,
+        0.5,
+        4.5
+      ],
+      "to": [
+        11.5,
+        3.5,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#water"
+        },
+        "south": {
+          "texture": "#water"
+        },
+        "east": {
+          "texture": "#water"
+        },
+        "west": {
+          "texture": "#water"
+        },
+        "up": {
+          "texture": "#water"
+        },
+        "down": {
+          "texture": "#water"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        3.5,
+        6.5
+      ],
+      "to": [
+        9.5,
+        6,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#water"
+        },
+        "south": {
+          "texture": "#water"
+        },
+        "east": {
+          "texture": "#water"
+        },
+        "west": {
+          "texture": "#water"
+        },
+        "up": {
+          "texture": "#water"
+        }
+      }
+    }
+  ]
+}

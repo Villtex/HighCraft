@@ -1,0 +1,302 @@
+{
+  "render_type": "minecraft:cutout",
+  "ambientocclusion": false,
+  "textures": {
+    "leaf": "highcraft:block/poppy_leaf",
+    "stem": "highcraft:block/poppy_stem",
+    "petal": "highcraft:block/poppy_petal",
+    "single": "highcraft:block/poppy_petal_single",
+    "pod": "highcraft:block/poppy_pod",
+    "crown": "highcraft:block/poppy_crown",
+    "particle": "highcraft:block/poppy_stage3"
+  },
+  "elements": [
+    {
+      "from": [
+        8,
+        0.5,
+        4.984999999999999
+      ],
+      "to": [
+        14.7,
+        0.5,
+        11.015
+      ],
+      "faces": {
+        "up": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "rotation": 90
+        },
+        "down": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            16,
+            16,
+            0
+          ],
+          "rotation": 270
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0.5,
+          8
+        ],
+        "axis": "z",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        8,
+        1.2,
+        5.84
+      ],
+      "to": [
+        12.8,
+        1.2,
+        10.16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "rotation": 90
+        },
+        "down": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            16,
+            16,
+            0
+          ],
+          "rotation": 270
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          1.2,
+          8
+        ],
+        "axis": "z",
+        "angle": -45
+      }
+    },
+    {
+      "from": [
+        1.2999999999999998,
+        0.9,
+        4.984999999999999
+      ],
+      "to": [
+        8,
+        0.9,
+        11.015
+      ],
+      "faces": {
+        "up": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "rotation": 270
+        },
+        "down": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            16,
+            16,
+            0
+          ],
+          "rotation": 90
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0.9,
+          8
+        ],
+        "axis": "z",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        3.2,
+        1.6,
+        5.84
+      ],
+      "to": [
+        8,
+        1.6,
+        10.16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "rotation": 270
+        },
+        "down": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            16,
+            16,
+            0
+          ],
+          "rotation": 90
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          1.6,
+          8
+        ],
+        "axis": "z",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        7.65,
+        0,
+        7.65
+      ],
+      "to": [
+        8.35,
+        9,
+        8.35
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stem"
+        },
+        "south": {
+          "texture": "#stem"
+        },
+        "east": {
+          "texture": "#stem"
+        },
+        "west": {
+          "texture": "#stem"
+        },
+        "up": {
+          "texture": "#stem"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        3.5,
+        6.0
+      ],
+      "to": [
+        8,
+        3.5,
+        10.0
+      ],
+      "faces": {
+        "up": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "rotation": 270
+        },
+        "down": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            16,
+            16,
+            0
+          ],
+          "rotation": 90
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          3.5,
+          8
+        ],
+        "axis": "z",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        6.4,
+        5.5,
+        8
+      ],
+      "to": [
+        9.6,
+        5.5,
+        11.5
+      ],
+      "faces": {
+        "up": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "rotation": 180
+        },
+        "down": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            16,
+            16,
+            0
+          ],
+          "rotation": 180
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          5.5,
+          8
+        ],
+        "axis": "x",
+        "angle": 45
+      }
+    }
+  ]
+}

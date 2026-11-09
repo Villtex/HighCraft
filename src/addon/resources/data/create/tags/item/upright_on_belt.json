@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "highcraft:coca_tea",
+    "highcraft:mushroom_tea",
+    "highcraft:detox_tea",
+    "highcraft:lsd_solution",
+    "highcraft:morphine",
+    "highcraft:reagent",
+    "highcraft:solvent",
+    "highcraft:aromatic_oil",
+    "highcraft:meth_batch",
+    "highcraft:mdma_batch",
+    "highcraft:precursor"
+  ]
+}

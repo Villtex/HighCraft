@@ -1,0 +1,22 @@
+{
+  "type": "highcraft:reacting",
+  "ingredients": [
+    {
+      "item": "highcraft:aromatic_oil",
+      "count": 2
+    },
+    {
+      "item": "highcraft:catalyst",
+      "count": 1
+    },
+    {
+      "item": "highcraft:reagent",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "highcraft:mdma_batch",
+    "count": 1
+  },
+  "processing_time": 440
+}

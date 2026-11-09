@@ -1,0 +1,19 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "highcraft:dried_cannabis_bud"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:ground_cannabis",
+      "count": 2
+    },
+    {
+      "id": "highcraft:ground_cannabis",
+      "chance": 0.25
+    }
+  ],
+  "processing_time": 120
+}

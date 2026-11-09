@@ -1,0 +1,63 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "highcraft:rolling_paper"
+  },
+  "loops": 1,
+  "results": [
+    {
+      "id": "highcraft:cigarette",
+      "count": 2
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_cigarette"
+        },
+        {
+          "item": "highcraft:cut_tobacco"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_cigarette"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_cigarette"
+        },
+        {
+          "item": "highcraft:rolling_paper"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_cigarette"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_cigarette"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_cigarette"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "highcraft_create:incomplete_cigarette"
+  }
+}

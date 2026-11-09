@@ -1,0 +1,18 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "highcraft:cannabis_leaf"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:hemp_fiber"
+    },
+    {
+      "id": "highcraft:hemp_fiber",
+      "chance": 0.5
+    }
+  ],
+  "processing_time": 100
+}

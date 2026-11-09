@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "id": "highcraft:cocaine"
+    },
+    "title": {
+      "translate": "advancements.highcraft.lab.title"
+    },
+    "description": {
+      "translate": "advancements.highcraft.lab.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "cocaine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "highcraft:cocaine"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "parent": "highcraft:first_harvest"
+}

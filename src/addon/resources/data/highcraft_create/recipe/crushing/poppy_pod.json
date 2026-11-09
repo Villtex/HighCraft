@@ -1,0 +1,19 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "highcraft:poppy_pod"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:poppy_seeds",
+      "count": 3
+    },
+    {
+      "id": "highcraft:raw_opium",
+      "chance": 0.25
+    }
+  ],
+  "processing_time": 150
+}

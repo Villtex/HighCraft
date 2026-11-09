@@ -1,0 +1,169 @@
+{
+  "render_type": "minecraft:cutout",
+  "ambientocclusion": true,
+  "textures": {
+    "leaves": "highcraft:block/coca_foliage",
+    "wood": "minecraft:block/stripped_jungle_log",
+    "berry": "highcraft:block/coca_berry",
+    "leaf": "highcraft:block/coca_stage1",
+    "particle": "highcraft:block/coca_stage0"
+  },
+  "elements": [
+    {
+      "from": [
+        7.4,
+        0,
+        7.4
+      ],
+      "to": [
+        8.6,
+        3,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        2.5,
+        6.5
+      ],
+      "to": [
+        11,
+        2.5,
+        9.5
+      ],
+      "faces": {
+        "up": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "rotation": 90
+        },
+        "down": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            16,
+            16,
+            0
+          ],
+          "rotation": 270
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          2.5,
+          8
+        ],
+        "axis": "z",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        5,
+        2.5,
+        6.5
+      ],
+      "to": [
+        8,
+        2.5,
+        9.5
+      ],
+      "faces": {
+        "up": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "rotation": 270
+        },
+        "down": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            16,
+            16,
+            0
+          ],
+          "rotation": 90
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          2.5,
+          8
+        ],
+        "axis": "z",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        6.75,
+        3,
+        5.5
+      ],
+      "to": [
+        9.25,
+        3,
+        8
+      ],
+      "faces": {
+        "up": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            16,
+            16,
+            0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          3,
+          8
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    }
+  ]
+}

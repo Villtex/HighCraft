@@ -1,0 +1,32 @@
+{
+  "type": "highcraft:growing",
+  "seed": {
+    "item": "highcraft:coca_seeds"
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "highcraft:coca_leaves",
+        "count": 5
+      },
+      "chance": 1.0
+    },
+    {
+      "item": {
+        "id": "highcraft:coca_seeds",
+        "count": 1
+      },
+      "chance": 1.0
+    },
+    {
+      "item": {
+        "id": "highcraft:coca_seeds",
+        "count": 1
+      },
+      "chance": 0.2
+    }
+  ],
+  "display_block": "highcraft:coca_bush",
+  "growth_time": 3000,
+  "water": 300
+}

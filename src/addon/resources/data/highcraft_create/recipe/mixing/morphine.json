@@ -1,0 +1,20 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "highcraft:opium"
+    },
+    {
+      "item": "highcraft:reagent"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:morphine"
+    }
+  ],
+  "heat_requirement": "heated"
+}

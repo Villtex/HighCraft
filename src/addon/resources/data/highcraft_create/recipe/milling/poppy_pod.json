@@ -1,0 +1,15 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "highcraft:poppy_pod"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:poppy_seeds",
+      "count": 3
+    }
+  ],
+  "processing_time": 100
+}

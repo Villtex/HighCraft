@@ -1,0 +1,22 @@
+{
+  "type": "highcraft:pill_pressing",
+  "ingredients": [
+    {
+      "item": "highcraft:mdma_powder",
+      "count": 1
+    },
+    {
+      "item": "minecraft:sugar",
+      "count": 1
+    },
+    {
+      "item": "minecraft:purple_dye",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "highcraft:ecstasy_pill_purple",
+    "count": 4
+  },
+  "processing_time": 120
+}

@@ -1,0 +1,19 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "highcraft:dried_tobacco"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:cut_tobacco",
+      "count": 2
+    },
+    {
+      "id": "highcraft:cut_tobacco",
+      "chance": 0.25
+    }
+  ],
+  "processing_time": 120
+}

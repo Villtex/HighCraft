@@ -1,0 +1,14 @@
+{
+  "type": "highcraft:grinding",
+  "ingredients": [
+    {
+      "item": "highcraft:dried_tobacco",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "highcraft:cut_tobacco",
+    "count": 2
+  },
+  "processing_time": 160
+}

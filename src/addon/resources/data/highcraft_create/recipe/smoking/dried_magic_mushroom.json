@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "ingredient": {
+    "item": "highcraft:magic_mushroom"
+  },
+  "result": {
+    "id": "highcraft:dried_magic_mushroom"
+  },
+  "cookingtime": 300,
+  "experience": 0.1
+}

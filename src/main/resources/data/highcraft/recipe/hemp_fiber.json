@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "highcraft:cannabis_leaf"
+    },
+    {
+      "item": "highcraft:cannabis_leaf"
+    },
+    {
+      "item": "highcraft:cannabis_leaf"
+    }
+  ],
+  "result": {
+    "id": "highcraft:hemp_fiber",
+    "count": 2
+  }
+}

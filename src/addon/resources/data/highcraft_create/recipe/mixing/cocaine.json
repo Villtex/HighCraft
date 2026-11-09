@@ -1,0 +1,21 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "highcraft:coca_paste"
+    },
+    {
+      "item": "highcraft:reagent"
+    },
+    {
+      "item": "highcraft:solvent"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:cocaine",
+      "count": 2
+    }
+  ],
+  "heat_requirement": "superheated"
+}

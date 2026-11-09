@@ -1,0 +1,14 @@
+{
+  "type": "highcraft:pressing",
+  "ingredients": [
+    {
+      "item": "highcraft:cannabis_resin",
+      "count": 2
+    }
+  ],
+  "result": {
+    "id": "highcraft:hashish",
+    "count": 1
+  },
+  "processing_time": 200
+}

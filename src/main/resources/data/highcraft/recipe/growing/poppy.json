@@ -1,0 +1,32 @@
+{
+  "type": "highcraft:growing",
+  "seed": {
+    "item": "highcraft:poppy_seeds"
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "highcraft:poppy_pod",
+        "count": 2
+      },
+      "chance": 1.0
+    },
+    {
+      "item": {
+        "id": "highcraft:poppy_seeds",
+        "count": 2
+      },
+      "chance": 1.0
+    },
+    {
+      "item": {
+        "id": "highcraft:raw_opium",
+        "count": 1
+      },
+      "chance": 0.4
+    }
+  ],
+  "display_block": "highcraft:poppy_crop",
+  "growth_time": 3000,
+  "water": 250
+}

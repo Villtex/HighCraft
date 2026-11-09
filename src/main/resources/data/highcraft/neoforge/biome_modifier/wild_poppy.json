@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#highcraft:spawns_wild_poppy",
+  "features": "highcraft:wild_poppy_patch",
+  "step": "vegetal_decoration"
+}

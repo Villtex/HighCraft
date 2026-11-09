@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "highcraft:block/chemical_barrel"
+    }
+  }
+}

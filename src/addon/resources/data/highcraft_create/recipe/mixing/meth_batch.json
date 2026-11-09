@@ -1,0 +1,23 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "highcraft:precursor"
+    },
+    {
+      "item": "highcraft:precursor"
+    },
+    {
+      "item": "highcraft:catalyst"
+    },
+    {
+      "item": "highcraft:solvent"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:meth_batch"
+    }
+  ],
+  "heat_requirement": "superheated"
+}

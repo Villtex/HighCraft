@@ -1,0 +1,22 @@
+{
+  "type": "highcraft:quality_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "highcraft:ground_cannabis"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:cocoa_beans"
+    }
+  ],
+  "result": {
+    "id": "highcraft:space_cookie",
+    "count": 4
+  }
+}

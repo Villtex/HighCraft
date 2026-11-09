@@ -1,0 +1,25 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "highcraft:ground_cannabis"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 250,
+      "fluid": "create:chocolate"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:space_cookie",
+      "count": 4
+    }
+  ]
+}

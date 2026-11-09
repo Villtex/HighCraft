@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "HRH",
+    "III"
+  ],
+  "key": {
+    "H": {
+      "item": "minecraft:heavy_weighted_pressure_plate"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "id": "highcraft:precision_scale",
+    "count": 1
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "highcraft:crystallizing",
+  "ingredients": [
+    {
+      "item": "highcraft:mdma_batch",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "highcraft:mdma_crystals",
+    "count": 4
+  },
+  "processing_time": 560
+}

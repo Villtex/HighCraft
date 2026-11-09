@@ -1,0 +1,19 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "highcraft:mdma_crystals"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:mdma_powder",
+      "count": 2
+    },
+    {
+      "id": "highcraft:mdma_powder",
+      "chance": 0.25
+    }
+  ],
+  "processing_time": 100
+}

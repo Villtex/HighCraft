@@ -1,0 +1,19 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "highcraft:dried_cannabis_bud"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:ground_cannabis",
+      "count": 3
+    },
+    {
+      "id": "highcraft:cannabis_seeds",
+      "chance": 0.1
+    }
+  ],
+  "processing_time": 150
+}

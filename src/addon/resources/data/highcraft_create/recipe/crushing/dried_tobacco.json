@@ -1,0 +1,15 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "highcraft:dried_tobacco"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:cut_tobacco",
+      "count": 3
+    }
+  ],
+  "processing_time": 150
+}

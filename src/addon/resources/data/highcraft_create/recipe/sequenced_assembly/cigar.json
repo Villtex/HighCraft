@@ -1,0 +1,46 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "highcraft:tobacco_leaf"
+  },
+  "loops": 3,
+  "results": [
+    {
+      "id": "highcraft:cigar"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_cigar"
+        },
+        {
+          "item": "highcraft:dried_tobacco"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_cigar"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_cigar"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_cigar"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "highcraft_create:incomplete_cigar"
+  }
+}

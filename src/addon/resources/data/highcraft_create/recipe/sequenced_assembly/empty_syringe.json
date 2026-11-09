@@ -1,0 +1,63 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "minecraft:glass_pane"
+  },
+  "loops": 1,
+  "results": [
+    {
+      "id": "highcraft:empty_syringe",
+      "count": 3
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_syringe"
+        },
+        {
+          "item": "minecraft:iron_nugget"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_syringe"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_syringe"
+        },
+        {
+          "item": "minecraft:iron_nugget"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_syringe"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_syringe"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_syringe"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "highcraft_create:incomplete_syringe"
+  }
+}

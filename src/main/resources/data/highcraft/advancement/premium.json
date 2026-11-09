@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "id": "highcraft:dried_cannabis_bud"
+    },
+    "title": {
+      "translate": "advancements.highcraft.premium.title"
+    },
+    "description": {
+      "translate": "advancements.highcraft.premium.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "q5": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "highcraft:quality": 5
+            }
+          }
+        ]
+      }
+    }
+  },
+  "parent": "highcraft:dried"
+}

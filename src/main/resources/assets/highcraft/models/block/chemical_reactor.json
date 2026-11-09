@@ -1,0 +1,268 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "highcraft:block/reactor_steel",
+    "base": "highcraft:block/reactor_base",
+    "steel": "highcraft:block/reactor_steel",
+    "vessel": "highcraft:block/reactor_vessel",
+    "top": "highcraft:block/reactor_top",
+    "liquid": "highcraft:block/reactor_liquid",
+    "pipe": "minecraft:block/copper_block",
+    "valve": "minecraft:block/red_concrete"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#base"
+        },
+        "south": {
+          "texture": "#steel"
+        },
+        "east": {
+          "texture": "#steel"
+        },
+        "west": {
+          "texture": "#steel"
+        },
+        "up": {
+          "texture": "#steel"
+        },
+        "down": {
+          "texture": "#steel"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        6,
+        2
+      ],
+      "to": [
+        14,
+        13,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel"
+        },
+        "south": {
+          "texture": "#vessel"
+        },
+        "east": {
+          "texture": "#vessel"
+        },
+        "west": {
+          "texture": "#vessel"
+        },
+        "up": {
+          "texture": "#vessel"
+        },
+        "down": {
+          "texture": "#vessel"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        13,
+        3
+      ],
+      "to": [
+        13,
+        15,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel"
+        },
+        "south": {
+          "texture": "#vessel"
+        },
+        "east": {
+          "texture": "#vessel"
+        },
+        "west": {
+          "texture": "#vessel"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "down": {
+          "texture": "#vessel"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        7.5,
+        1.4
+      ],
+      "to": [
+        10.5,
+        12,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#liquid"
+        },
+        "east": {
+          "texture": "#steel"
+        },
+        "west": {
+          "texture": "#steel"
+        },
+        "up": {
+          "texture": "#steel"
+        },
+        "down": {
+          "texture": "#steel"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        15,
+        7
+      ],
+      "to": [
+        9,
+        17.5,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pipe"
+        },
+        "south": {
+          "texture": "#pipe"
+        },
+        "east": {
+          "texture": "#pipe"
+        },
+        "west": {
+          "texture": "#pipe"
+        },
+        "up": {
+          "texture": "#pipe"
+        },
+        "down": {
+          "texture": "#pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        16.5,
+        7.25
+      ],
+      "to": [
+        15,
+        17.5,
+        8.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pipe"
+        },
+        "south": {
+          "texture": "#pipe"
+        },
+        "east": {
+          "texture": "#pipe"
+        },
+        "west": {
+          "texture": "#pipe"
+        },
+        "up": {
+          "texture": "#pipe"
+        },
+        "down": {
+          "texture": "#pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        6,
+        7.25
+      ],
+      "to": [
+        15,
+        17.5,
+        8.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pipe"
+        },
+        "south": {
+          "texture": "#pipe"
+        },
+        "east": {
+          "texture": "#pipe"
+        },
+        "west": {
+          "texture": "#pipe"
+        },
+        "up": {
+          "texture": "#pipe"
+        },
+        "down": {
+          "texture": "#pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        9,
+        9.5
+      ],
+      "to": [
+        15.5,
+        11,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#valve"
+        },
+        "south": {
+          "texture": "#valve"
+        },
+        "east": {
+          "texture": "#valve"
+        },
+        "west": {
+          "texture": "#valve"
+        },
+        "up": {
+          "texture": "#valve"
+        },
+        "down": {
+          "texture": "#valve"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#highcraft:spawns_wild_coca",
+  "features": "highcraft:wild_coca_patch",
+  "step": "vegetal_decoration"
+}

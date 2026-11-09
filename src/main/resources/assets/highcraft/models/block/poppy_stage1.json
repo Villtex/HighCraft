@@ -1,0 +1,101 @@
+{
+  "render_type": "minecraft:cutout",
+  "ambientocclusion": false,
+  "textures": {
+    "leaf": "highcraft:block/poppy_leaf",
+    "stem": "highcraft:block/poppy_stem",
+    "petal": "highcraft:block/poppy_petal",
+    "single": "highcraft:block/poppy_petal_single",
+    "pod": "highcraft:block/poppy_pod",
+    "crown": "highcraft:block/poppy_crown",
+    "particle": "highcraft:block/poppy_stage1"
+  },
+  "elements": [
+    {
+      "from": [
+        8,
+        0.5,
+        5.795
+      ],
+      "to": [
+        12.9,
+        0.5,
+        10.205
+      ],
+      "faces": {
+        "up": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "rotation": 90
+        },
+        "down": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            16,
+            16,
+            0
+          ],
+          "rotation": 270
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0.5,
+          8
+        ],
+        "axis": "z",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        3.0999999999999996,
+        0.9,
+        5.795
+      ],
+      "to": [
+        8,
+        0.9,
+        10.205
+      ],
+      "faces": {
+        "up": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "rotation": 270
+        },
+        "down": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            16,
+            16,
+            0
+          ],
+          "rotation": 90
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0.9,
+          8
+        ],
+        "axis": "z",
+        "angle": 22.5
+      }
+    }
+  ]
+}

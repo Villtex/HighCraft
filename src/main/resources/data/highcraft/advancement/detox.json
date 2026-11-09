@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "highcraft:detox_tea"
+    },
+    "title": {
+      "translate": "advancements.highcraft.detox.title"
+    },
+    "description": {
+      "translate": "advancements.highcraft.detox.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "tea": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": "highcraft:detox_tea"
+        }
+      }
+    }
+  },
+  "parent": "highcraft:root"
+}

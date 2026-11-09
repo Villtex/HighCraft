@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "FBF",
+    "QQQ",
+    "ICI"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:glass_bottle"
+    },
+    "B": {
+      "item": "minecraft:brewing_stand"
+    },
+    "Q": {
+      "item": "minecraft:white_concrete"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "minecraft:crafting_table"
+    }
+  },
+  "result": {
+    "id": "highcraft:lab_station",
+    "count": 1
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "highcraft:quality_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "highcraft:rolling_paper"
+    },
+    {
+      "item": "highcraft:rolling_paper"
+    },
+    {
+      "item": "highcraft:cut_tobacco"
+    }
+  ],
+  "result": {
+    "id": "highcraft:cigarette",
+    "count": 2
+  }
+}

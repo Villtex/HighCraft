@@ -1,0 +1,21 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "highcraft:poppy_pod"
+    },
+    {
+      "item": "highcraft:scoring_knife"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:raw_opium"
+    },
+    {
+      "id": "highcraft:poppy_seeds",
+      "chance": 0.5
+    }
+  ],
+  "keep_held_item": true
+}

@@ -1,0 +1,21 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "highcraft:dried_cannabis_bud"
+    },
+    {
+      "item": "highcraft:dried_cannabis_bud"
+    },
+    {
+      "item": "highcraft:solvent"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:cannabis_resin",
+      "count": 3
+    }
+  ],
+  "heat_requirement": "heated"
+}

@@ -1,0 +1,164 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "north"
+      },
+      "apply": {
+        "model": "highcraft:block/bong"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "load": "cannabis"
+      },
+      "apply": {
+        "model": "highcraft:block/bong_load_cannabis"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "load": "tobacco"
+      },
+      "apply": {
+        "model": "highcraft:block/bong_load_tobacco"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "load": "opium"
+      },
+      "apply": {
+        "model": "highcraft:block/bong_load_opium"
+      }
+    },
+    {
+      "when": {
+        "facing": "east"
+      },
+      "apply": {
+        "model": "highcraft:block/bong",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "load": "cannabis"
+      },
+      "apply": {
+        "model": "highcraft:block/bong_load_cannabis",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "load": "tobacco"
+      },
+      "apply": {
+        "model": "highcraft:block/bong_load_tobacco",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "load": "opium"
+      },
+      "apply": {
+        "model": "highcraft:block/bong_load_opium",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south"
+      },
+      "apply": {
+        "model": "highcraft:block/bong",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "load": "cannabis"
+      },
+      "apply": {
+        "model": "highcraft:block/bong_load_cannabis",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "load": "tobacco"
+      },
+      "apply": {
+        "model": "highcraft:block/bong_load_tobacco",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "load": "opium"
+      },
+      "apply": {
+        "model": "highcraft:block/bong_load_opium",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west"
+      },
+      "apply": {
+        "model": "highcraft:block/bong",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "load": "cannabis"
+      },
+      "apply": {
+        "model": "highcraft:block/bong_load_cannabis",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "load": "tobacco"
+      },
+      "apply": {
+        "model": "highcraft:block/bong_load_tobacco",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "load": "opium"
+      },
+      "apply": {
+        "model": "highcraft:block/bong_load_opium",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "water": "true"
+      },
+      "apply": {
+        "model": "highcraft:block/bong_water"
+      }
+    }
+  ]
+}

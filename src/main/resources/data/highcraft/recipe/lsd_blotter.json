@@ -1,0 +1,16 @@
+{
+  "type": "highcraft:quality_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "highcraft:lsd_solution"
+    },
+    {
+      "item": "minecraft:paper"
+    }
+  ],
+  "result": {
+    "id": "highcraft:lsd_blotter",
+    "count": 6
+  }
+}

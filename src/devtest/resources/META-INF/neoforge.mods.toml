@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="highcraft_devtest"
+version="0.0.0"
+displayName="HighCraft Devtest"
+description="Automated screenshot test (development only)"
+
+[[dependencies.highcraft_devtest]]
+    modId="highcraft"
+    type="required"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"

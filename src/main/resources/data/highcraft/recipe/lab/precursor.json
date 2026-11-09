@@ -1,0 +1,22 @@
+{
+  "type": "highcraft:lab",
+  "ingredients": [
+    {
+      "item": "minecraft:sugar",
+      "count": 2
+    },
+    {
+      "item": "minecraft:gunpowder",
+      "count": 1
+    },
+    {
+      "item": "highcraft:reagent",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "highcraft:precursor",
+    "count": 2
+  },
+  "processing_time": 300
+}

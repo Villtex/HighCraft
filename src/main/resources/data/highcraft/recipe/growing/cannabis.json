@@ -1,0 +1,39 @@
+{
+  "type": "highcraft:growing",
+  "seed": {
+    "item": "highcraft:cannabis_seeds"
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "highcraft:cannabis_bud",
+        "count": 3
+      },
+      "chance": 1.0
+    },
+    {
+      "item": {
+        "id": "highcraft:cannabis_leaf",
+        "count": 2
+      },
+      "chance": 1.0
+    },
+    {
+      "item": {
+        "id": "highcraft:cannabis_seeds",
+        "count": 1
+      },
+      "chance": 1.0
+    },
+    {
+      "item": {
+        "id": "highcraft:cannabis_seeds",
+        "count": 1
+      },
+      "chance": 0.3
+    }
+  ],
+  "display_block": "highcraft:cannabis_crop",
+  "growth_time": 3600,
+  "water": 500
+}

@@ -1,0 +1,12 @@
+.gradle/
+build/
+run/
+run-server/
+out/
+*.iml
+.idea/
+run-server-create/
+screenshots/
+highcraft-source.zip
+tools/__pycache__/
+*.pyc

@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "id": "highcraft:cannabis_seeds"
+    },
+    "title": {
+      "translate": "advancements.highcraft.first_seed.title"
+    },
+    "description": {
+      "translate": "advancements.highcraft.first_seed.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "seeds": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "highcraft:cannabis_seeds"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "parent": "highcraft:root"
+}

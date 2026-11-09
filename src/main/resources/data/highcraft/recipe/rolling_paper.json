@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "highcraft:hemp_fiber"
+    }
+  ],
+  "result": {
+    "id": "highcraft:rolling_paper",
+    "count": 8
+  }
+}

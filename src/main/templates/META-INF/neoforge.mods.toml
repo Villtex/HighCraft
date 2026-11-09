@@ -1,0 +1,43 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+issueTrackerURL=""
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+description='''${mod_description}
+
+Features:
+ • 5 crops with volumetric 3D models (cannabis, tobacco, coca, opium poppy, magic mushrooms) + wild plants
+ • LSD from ergot (chemistry lab) with a kaleidoscope trip
+ • High-resolution 32x32 item icons and 3D held models for joints, cigarettes, cigars, syringes, pipe, lighter, buds, mushrooms ...
+ • Drying rack, herb grinder, extractor, chemistry lab, hydraulic press, grow tent, grow lamp, bong, precision scale
+ • Quality system (1-5 stars), addiction, tolerance, withdrawal and overdose
+ • Dealer & Grower villagers
+ • Screen shaders and camera effects (Sodium/Iris compatible), JEI integration
+'''
+logoFile=""
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neo_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="jei"
+    type="optional"
+    versionRange="[19.0,)"
+    ordering="NONE"
+    side="CLIENT"

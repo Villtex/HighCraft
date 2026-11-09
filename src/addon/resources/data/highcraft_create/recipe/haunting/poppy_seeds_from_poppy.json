@@ -1,0 +1,14 @@
+{
+  "type": "create:haunting",
+  "ingredients": [
+    {
+      "item": "minecraft:poppy"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:poppy_seeds",
+      "count": 2
+    }
+  ]
+}

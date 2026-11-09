@@ -1,0 +1,25 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "highcraft:dried_coca_leaves"
+    },
+    {
+      "item": "highcraft:dried_coca_leaves"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 250,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:coca_tea"
+    }
+  ],
+  "heat_requirement": "heated"
+}

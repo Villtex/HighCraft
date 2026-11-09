@@ -1,0 +1,38 @@
+{
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "highcraft:item/opium",
+    "fill": "highcraft:item/opium"
+  },
+  "elements": [
+    {
+      "from": [
+        12.3,
+        6.5,
+        7.3
+      ],
+      "to": [
+        14.2,
+        6.9,
+        8.7
+      ],
+      "faces": {
+        "up": {
+          "texture": "#fill"
+        },
+        "north": {
+          "texture": "#fill"
+        },
+        "south": {
+          "texture": "#fill"
+        },
+        "east": {
+          "texture": "#fill"
+        },
+        "west": {
+          "texture": "#fill"
+        }
+      }
+    }
+  ]
+}

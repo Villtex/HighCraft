@@ -1,0 +1,16 @@
+{
+  "type": "highcraft:quality_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "highcraft:morphine"
+    },
+    {
+      "item": "highcraft:empty_syringe"
+    }
+  ],
+  "result": {
+    "id": "highcraft:morphine_syringe",
+    "count": 1
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "highcraft:morphine_syringe"
+    },
+    "title": {
+      "translate": "advancements.highcraft.overdose.title"
+    },
+    "description": {
+      "translate": "advancements.highcraft.overdose.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "od": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": {
+        "effects": {
+          "highcraft:overdose": {}
+        }
+      }
+    }
+  },
+  "parent": "highcraft:root"
+}

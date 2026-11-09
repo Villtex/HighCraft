@@ -1,0 +1,14 @@
+{
+  "type": "highcraft:grinding",
+  "ingredients": [
+    {
+      "item": "highcraft:poppy_pod",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "highcraft:poppy_seeds",
+    "count": 3
+  },
+  "processing_time": 100
+}

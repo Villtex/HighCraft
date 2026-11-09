@@ -1,0 +1,26 @@
+{
+  "replace": false,
+  "values": [
+    "highcraft:grinder",
+    "highcraft:extractor",
+    "highcraft:lab_station",
+    "highcraft:press",
+    "highcraft:grow_lamp",
+    "highcraft:precision_scale",
+    "highcraft:chemical_reactor",
+    "highcraft:crystallizer",
+    "highcraft:pill_press",
+    "highcraft:fume_hood",
+    "highcraft:exhaust_fan",
+    "highcraft:lab_tiles",
+    "highcraft:lab_tile_slab",
+    "highcraft:lab_tile_stairs",
+    "highcraft:hazard_stripes",
+    "highcraft:lab_counter",
+    "highcraft:chemical_barrel",
+    "highcraft:hazard_barrel",
+    "highcraft:gas_cylinder",
+    "highcraft:hazard_sign",
+    "highcraft:lab_light"
+  ]
+}

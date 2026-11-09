@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "highcraft:block/poppy_stage5"
+      },
+      {
+        "model": "highcraft:block/poppy_stage5",
+        "y": 90
+      },
+      {
+        "model": "highcraft:block/poppy_stage5",
+        "y": 180
+      },
+      {
+        "model": "highcraft:block/poppy_stage5",
+        "y": 270
+      }
+    ]
+  }
+}

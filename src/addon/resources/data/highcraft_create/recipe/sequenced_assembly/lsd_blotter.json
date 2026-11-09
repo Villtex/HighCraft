@@ -1,0 +1,60 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "minecraft:paper"
+  },
+  "loops": 1,
+  "results": [
+    {
+      "id": "highcraft:lsd_blotter",
+      "count": 8
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_blotter_sheet"
+        },
+        {
+          "item": "highcraft:lsd_solution"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_blotter_sheet"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_blotter_sheet"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_blotter_sheet"
+        }
+      ]
+    },
+    {
+      "type": "create:cutting",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_blotter_sheet"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_blotter_sheet"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "highcraft_create:incomplete_blotter_sheet"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "type": "highcraft:growing",
+  "seed": {
+    "item": "highcraft:mushroom_spores"
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "highcraft:magic_mushroom",
+        "count": 3
+      },
+      "chance": 1.0
+    },
+    {
+      "item": {
+        "id": "highcraft:mushroom_spores",
+        "count": 1
+      },
+      "chance": 1.0
+    },
+    {
+      "item": {
+        "id": "highcraft:mushroom_spores",
+        "count": 1
+      },
+      "chance": 0.3
+    }
+  ],
+  "display_block": "highcraft:magic_mushroom",
+  "growth_time": 2400,
+  "water": 100
+}

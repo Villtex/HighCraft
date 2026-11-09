@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "id": "highcraft:ecstasy_pill_pink"
+    },
+    "title": {
+      "translate": "advancements.highcraft.pill_press.title"
+    },
+    "description": {
+      "translate": "advancements.highcraft.pill_press.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "pill": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "highcraft:ecstasy_pill_pink",
+              "highcraft:ecstasy_pill_blue",
+              "highcraft:ecstasy_pill_yellow",
+              "highcraft:ecstasy_pill_purple"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "parent": "highcraft:lab"
+}

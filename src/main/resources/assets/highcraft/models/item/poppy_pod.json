@@ -1,0 +1,15 @@
+{
+  "loader": "neoforge:separate_transforms",
+  "gui_light": "front",
+  "base": {
+    "parent": "highcraft:item/3d/poppy_pod"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "highcraft:item/poppy_pod"
+      }
+    }
+  }
+}

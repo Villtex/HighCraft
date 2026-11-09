@@ -1,0 +1,22 @@
+{
+  "type": "highcraft:quality_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "highcraft:dried_tobacco"
+    },
+    {
+      "item": "highcraft:dried_tobacco"
+    },
+    {
+      "item": "highcraft:dried_tobacco"
+    },
+    {
+      "item": "highcraft:tobacco_leaf"
+    }
+  ],
+  "result": {
+    "id": "highcraft:cigar",
+    "count": 1
+  }
+}

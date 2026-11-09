@@ -1,0 +1,28 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "highcraft:dried_magic_mushroom"
+    },
+    {
+      "item": "highcraft:dried_magic_mushroom"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 250,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:mushroom_tea"
+    }
+  ],
+  "heat_requirement": "heated"
+}

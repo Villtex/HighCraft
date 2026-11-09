@@ -1,0 +1,17 @@
+{
+  "type": "create:haunting",
+  "ingredients": [
+    {
+      "item": "minecraft:wheat"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:ergot"
+    },
+    {
+      "id": "highcraft:ergot",
+      "chance": 0.25
+    }
+  ]
+}

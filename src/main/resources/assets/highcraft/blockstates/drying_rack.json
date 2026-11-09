@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "highcraft:block/drying_rack"
+    },
+    "facing=east": {
+      "model": "highcraft:block/drying_rack",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "highcraft:block/drying_rack",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "highcraft:block/drying_rack",
+      "y": 270
+    }
+  }
+}

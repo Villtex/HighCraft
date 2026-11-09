@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "highcraft:block/lab_light",
+    "light": "highcraft:block/lab_light",
+    "steel": "highcraft:block/lab_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        14,
+        3
+      ],
+      "to": [
+        15,
+        16,
+        13
+      ],
+      "faces": {
+        "down": {
+          "texture": "#light"
+        },
+        "north": {
+          "texture": "#steel"
+        },
+        "south": {
+          "texture": "#steel"
+        },
+        "east": {
+          "texture": "#steel"
+        },
+        "west": {
+          "texture": "#steel"
+        },
+        "up": {
+          "texture": "#steel"
+        }
+      },
+      "shade": false
+    }
+  ]
+}

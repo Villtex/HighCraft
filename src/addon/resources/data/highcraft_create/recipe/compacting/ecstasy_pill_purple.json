@@ -1,0 +1,20 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "highcraft:mdma_powder"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:purple_dye"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:ecstasy_pill_purple",
+      "count": 4
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "highcraft:magic_mushroom"
+    },
+    "title": {
+      "translate": "advancements.highcraft.trip.title"
+    },
+    "description": {
+      "translate": "advancements.highcraft.trip.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "trip": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": {
+        "effects": {
+          "highcraft:trip": {}
+        }
+      }
+    }
+  },
+  "parent": "highcraft:root"
+}

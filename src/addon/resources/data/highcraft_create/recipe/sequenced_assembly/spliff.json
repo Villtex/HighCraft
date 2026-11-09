@@ -1,0 +1,62 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "highcraft:rolling_paper"
+  },
+  "loops": 1,
+  "results": [
+    {
+      "id": "highcraft:spliff"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_spliff"
+        },
+        {
+          "item": "highcraft:ground_cannabis"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_spliff"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_spliff"
+        },
+        {
+          "item": "highcraft:cut_tobacco"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_spliff"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "highcraft_create:incomplete_spliff"
+        }
+      ],
+      "results": [
+        {
+          "id": "highcraft_create:incomplete_spliff"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "highcraft_create:incomplete_spliff"
+  }
+}

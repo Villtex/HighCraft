@@ -1,0 +1,74 @@
+{
+  "render_type": "minecraft:cutout",
+  "ambientocclusion": true,
+  "textures": {
+    "leaves": "highcraft:block/coca_foliage",
+    "wood": "minecraft:block/stripped_jungle_log",
+    "berry": "highcraft:block/coca_berry",
+    "leaf": "highcraft:block/coca_stage1",
+    "particle": "highcraft:block/coca_stage1"
+  },
+  "elements": [
+    {
+      "from": [
+        7.4,
+        0,
+        7.4
+      ],
+      "to": [
+        8.6,
+        4,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        2.5,
+        5.5
+      ],
+      "to": [
+        10.5,
+        6.5,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#leaves"
+        },
+        "south": {
+          "texture": "#leaves"
+        },
+        "east": {
+          "texture": "#leaves"
+        },
+        "west": {
+          "texture": "#leaves"
+        },
+        "up": {
+          "texture": "#leaves"
+        },
+        "down": {
+          "texture": "#leaves"
+        }
+      }
+    }
+  ]
+}

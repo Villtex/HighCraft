@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "ingredient": {
+    "item": "highcraft:cannabis_bud"
+  },
+  "result": {
+    "id": "highcraft:dried_cannabis_bud"
+  },
+  "cookingtime": 300,
+  "experience": 0.1
+}

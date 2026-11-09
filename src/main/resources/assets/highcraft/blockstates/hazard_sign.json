@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "highcraft:block/hazard_sign"
+    },
+    "facing=east": {
+      "model": "highcraft:block/hazard_sign",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "highcraft:block/hazard_sign",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "highcraft:block/hazard_sign",
+      "y": 270
+    }
+  }
+}

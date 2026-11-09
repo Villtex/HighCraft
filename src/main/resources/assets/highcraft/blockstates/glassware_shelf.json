@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "highcraft:block/glassware_shelf"
+    },
+    "facing=east": {
+      "model": "highcraft:block/glassware_shelf",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "highcraft:block/glassware_shelf",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "highcraft:block/glassware_shelf",
+      "y": 270
+    }
+  }
+}

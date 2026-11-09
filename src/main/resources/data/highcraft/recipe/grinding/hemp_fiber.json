@@ -1,0 +1,14 @@
+{
+  "type": "highcraft:grinding",
+  "ingredients": [
+    {
+      "item": "highcraft:cannabis_leaf",
+      "count": 2
+    }
+  ],
+  "result": {
+    "id": "highcraft:hemp_fiber",
+    "count": 3
+  },
+  "processing_time": 120
+}

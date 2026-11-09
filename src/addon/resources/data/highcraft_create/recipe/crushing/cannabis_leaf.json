@@ -1,0 +1,19 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "highcraft:cannabis_leaf"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:hemp_fiber",
+      "count": 2
+    },
+    {
+      "id": "highcraft:cannabis_resin",
+      "chance": 0.05
+    }
+  ],
+  "processing_time": 120
+}

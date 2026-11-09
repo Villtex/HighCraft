@@ -1,0 +1,22 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "highcraft:poppy_pod"
+    },
+    {
+      "item": "highcraft:poppy_pod"
+    },
+    {
+      "item": "highcraft:poppy_pod"
+    },
+    {
+      "item": "highcraft:solvent"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:raw_opium"
+    }
+  ]
+}

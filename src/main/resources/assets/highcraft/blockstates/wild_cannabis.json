@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "highcraft:block/cannabis_stage3"
+      },
+      {
+        "model": "highcraft:block/cannabis_stage3",
+        "y": 90
+      },
+      {
+        "model": "highcraft:block/cannabis_stage3",
+        "y": 180
+      },
+      {
+        "model": "highcraft:block/cannabis_stage3",
+        "y": 270
+      }
+    ]
+  }
+}

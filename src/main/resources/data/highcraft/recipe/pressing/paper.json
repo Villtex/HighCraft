@@ -1,0 +1,14 @@
+{
+  "type": "highcraft:pressing",
+  "ingredients": [
+    {
+      "item": "highcraft:hemp_fiber",
+      "count": 3
+    }
+  ],
+  "result": {
+    "id": "minecraft:paper",
+    "count": 4
+  },
+  "processing_time": 100
+}

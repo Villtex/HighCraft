@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:bone_meal"
+    },
+    {
+      "item": "highcraft:cannabis_leaf"
+    },
+    {
+      "item": "highcraft:cannabis_leaf"
+    }
+  ],
+  "result": {
+    "id": "highcraft:fertilizer",
+    "count": 2
+  }
+}

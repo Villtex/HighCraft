@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "highcraft:block/precision_scale"
+    },
+    "facing=east": {
+      "model": "highcraft:block/precision_scale",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "highcraft:block/precision_scale",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "highcraft:block/precision_scale",
+      "y": 270
+    }
+  }
+}

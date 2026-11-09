@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "id": "highcraft:crystal_meth"
+    },
+    "title": {
+      "translate": "advancements.highcraft.crystal.title"
+    },
+    "description": {
+      "translate": "advancements.highcraft.crystal.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "crystal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "highcraft:crystal_meth"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "parent": "highcraft:lab"
+}

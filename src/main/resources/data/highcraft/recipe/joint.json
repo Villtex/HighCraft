@@ -1,0 +1,19 @@
+{
+  "type": "highcraft:quality_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "highcraft:rolling_paper"
+    },
+    {
+      "item": "highcraft:ground_cannabis"
+    },
+    {
+      "item": "highcraft:ground_cannabis"
+    }
+  ],
+  "result": {
+    "id": "highcraft:joint",
+    "count": 1
+  }
+}

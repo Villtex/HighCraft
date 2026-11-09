@@ -1,0 +1,15 @@
+{
+  "loader": "neoforge:separate_transforms",
+  "gui_light": "front",
+  "base": {
+    "parent": "highcraft:item/3d/smoking_pipe"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "highcraft:item/smoking_pipe"
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+
+[[mods]]
+modId="${addon_mod_id}"
+version="${addon_mod_version}"
+displayName="${addon_mod_name}"
+authors="${mod_authors}"
+description='''Create integration for HighCraft:
+ • Millstone & crushing wheels: buds, tobacco, poppy pods, cannabis leaves
+ • Mixer (heated/superheated): resin, coca paste, cocaine, morphine, LSD, teas, space cookies with chocolate
+ • Compacting: hashish, hemp paper
+ • Fans: drying (smoking), haunting (ergot from wheat, spores from glow lichen)
+ • Deployer & sequenced assembly: joints, spliffs, cigarettes, cigars, LSD blotters, syringes
+'''
+
+[[dependencies.${addon_mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neo_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${addon_mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${addon_mod_id}]]
+    modId="highcraft"
+    type="required"
+    versionRange="[${mod_version},)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${addon_mod_id}]]
+    modId="create"
+    type="required"
+    versionRange="[6.0.0,)"
+    ordering="AFTER"
+    side="BOTH"

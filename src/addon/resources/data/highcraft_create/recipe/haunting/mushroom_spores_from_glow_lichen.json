@@ -1,0 +1,13 @@
+{
+  "type": "create:haunting",
+  "ingredients": [
+    {
+      "item": "minecraft:glow_lichen"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:mushroom_spores"
+    }
+  ]
+}

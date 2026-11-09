@@ -1,0 +1,23 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "highcraft:ergot"
+    },
+    {
+      "item": "highcraft:ergot"
+    },
+    {
+      "item": "highcraft:reagent"
+    },
+    {
+      "item": "highcraft:solvent"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:lsd_solution"
+    }
+  ],
+  "heat_requirement": "superheated"
+}

@@ -1,0 +1,25 @@
+{
+  "type": "highcraft:quality_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "highcraft:dried_coca_leaves"
+    },
+    {
+      "item": "highcraft:dried_coca_leaves"
+    },
+    {
+      "type": "neoforge:components",
+      "items": "minecraft:potion",
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:water"
+        }
+      }
+    }
+  ],
+  "result": {
+    "id": "highcraft:coca_tea",
+    "count": 1
+  }
+}

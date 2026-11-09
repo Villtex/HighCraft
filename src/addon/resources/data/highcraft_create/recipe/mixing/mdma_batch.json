@@ -1,0 +1,23 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "highcraft:aromatic_oil"
+    },
+    {
+      "item": "highcraft:aromatic_oil"
+    },
+    {
+      "item": "highcraft:catalyst"
+    },
+    {
+      "item": "highcraft:reagent"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:mdma_batch"
+    }
+  ],
+  "heat_requirement": "heated"
+}

@@ -1,0 +1,22 @@
+{
+  "type": "highcraft:lab",
+  "ingredients": [
+    {
+      "item": "highcraft:opium",
+      "count": 1
+    },
+    {
+      "item": "highcraft:reagent",
+      "count": 1
+    },
+    {
+      "item": "minecraft:glass_bottle",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "highcraft:morphine",
+    "count": 1
+  },
+  "processing_time": 360
+}

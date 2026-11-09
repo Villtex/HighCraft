@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#highcraft:spawns_magic_mushrooms",
+  "features": "highcraft:magic_mushroom_patch",
+  "step": "vegetal_decoration"
+}

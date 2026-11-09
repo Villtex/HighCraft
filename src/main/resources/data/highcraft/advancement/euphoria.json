@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "highcraft:ecstasy_pill_blue"
+    },
+    "title": {
+      "translate": "advancements.highcraft.euphoria.title"
+    },
+    "description": {
+      "translate": "advancements.highcraft.euphoria.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "euphoria": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": {
+        "effects": {
+          "highcraft:euphoria": {}
+        }
+      }
+    }
+  },
+  "parent": "highcraft:pill_press"
+}

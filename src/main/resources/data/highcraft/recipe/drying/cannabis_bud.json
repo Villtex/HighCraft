@@ -1,0 +1,14 @@
+{
+  "type": "highcraft:drying",
+  "ingredients": [
+    {
+      "item": "highcraft:cannabis_bud",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "highcraft:dried_cannabis_bud",
+    "count": 1
+  },
+  "processing_time": 1200
+}

@@ -1,0 +1,18 @@
+{
+  "type": "highcraft:extracting",
+  "ingredients": [
+    {
+      "item": "highcraft:dried_cannabis_bud",
+      "count": 2
+    },
+    {
+      "item": "highcraft:solvent",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "highcraft:cannabis_resin",
+    "count": 3
+  },
+  "processing_time": 240
+}

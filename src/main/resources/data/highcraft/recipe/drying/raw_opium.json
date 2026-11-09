@@ -1,0 +1,14 @@
+{
+  "type": "highcraft:drying",
+  "ingredients": [
+    {
+      "item": "highcraft:raw_opium",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "highcraft:opium",
+    "count": 1
+  },
+  "processing_time": 1500
+}

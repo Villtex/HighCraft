@@ -1,0 +1,16 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "highcraft:cannabis_resin"
+    },
+    {
+      "item": "highcraft:cannabis_resin"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:hashish"
+    }
+  ]
+}

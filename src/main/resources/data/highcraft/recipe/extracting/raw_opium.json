@@ -1,0 +1,18 @@
+{
+  "type": "highcraft:extracting",
+  "ingredients": [
+    {
+      "item": "highcraft:poppy_pod",
+      "count": 3
+    },
+    {
+      "item": "highcraft:solvent",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "highcraft:raw_opium",
+    "count": 1
+  },
+  "processing_time": 300
+}

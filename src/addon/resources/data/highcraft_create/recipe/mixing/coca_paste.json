@@ -1,0 +1,26 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "highcraft:dried_coca_leaves"
+    },
+    {
+      "item": "highcraft:dried_coca_leaves"
+    },
+    {
+      "item": "highcraft:dried_coca_leaves"
+    },
+    {
+      "item": "highcraft:dried_coca_leaves"
+    },
+    {
+      "item": "highcraft:solvent"
+    }
+  ],
+  "results": [
+    {
+      "id": "highcraft:coca_paste"
+    }
+  ],
+  "heat_requirement": "heated"
+}

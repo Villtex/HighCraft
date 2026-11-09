@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "ingredient": {
+    "item": "highcraft:tobacco_leaf"
+  },
+  "result": {
+    "id": "highcraft:dried_tobacco"
+  },
+  "cookingtime": 300,
+  "experience": 0.1
+}

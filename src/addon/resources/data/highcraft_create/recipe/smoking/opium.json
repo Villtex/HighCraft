@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "ingredient": {
+    "item": "highcraft:raw_opium"
+  },
+  "result": {
+    "id": "highcraft:opium"
+  },
+  "cookingtime": 300,
+  "experience": 0.1
+}

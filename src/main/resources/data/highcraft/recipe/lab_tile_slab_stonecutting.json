@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "highcraft:lab_tiles"
+  },
+  "result": {
+    "id": "highcraft:lab_tile_slab",
+    "count": 2
+  }
+}

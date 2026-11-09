@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "highcraft:cannabis_crop",
+    "highcraft:tobacco_crop",
+    "highcraft:poppy_crop",
+    "highcraft:coca_bush",
+    "highcraft:wild_cannabis",
+    "highcraft:wild_tobacco",
+    "highcraft:wild_coca",
+    "highcraft:wild_poppy"
+  ]
+}
