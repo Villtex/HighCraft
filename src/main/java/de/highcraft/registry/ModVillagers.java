@@ -21,6 +21,8 @@ public final class ModVillagers {
             () -> new PoiType(states(ModBlocks.PRECISION_SCALE.get()), 1, 1));
     public static final DeferredHolder<PoiType, PoiType> GROWER_POI = POI_TYPES.register("grower",
             () -> new PoiType(states(ModBlocks.DRYING_RACK.get()), 1, 1));
+    public static final DeferredHolder<PoiType, PoiType> CHEMIST_POI = POI_TYPES.register("chemist",
+            () -> new PoiType(states(ModBlocks.CHEMICAL_REACTOR.get()), 1, 1));
 
     /** Dealer - workstation: precision scale. Buys finished products, sells accessories and rare seeds. */
     public static final DeferredHolder<VillagerProfession, VillagerProfession> DEALER = PROFESSIONS.register("dealer",
@@ -34,6 +36,15 @@ public final class ModVillagers {
                     h -> h.is(GROWER_POI.getKey()), h -> h.is(GROWER_POI.getKey()),
                     ImmutableSet.of(ModItems.CANNABIS_SEEDS.get(), ModItems.TOBACCO_SEEDS.get()), ImmutableSet.of(),
                     SoundEvents.VILLAGER_WORK_FARMER));
+
+    /**
+     * Chemist - workstation: chemical reactor. Sells lab chemicals, glassware and safety gear, buys lab products.
+     * Every village drug lab spawns one (see {@code tools/gen_structures.py}).
+     */
+    public static final DeferredHolder<VillagerProfession, VillagerProfession> CHEMIST = PROFESSIONS.register("chemist",
+            () -> new VillagerProfession(HighCraft.id("chemist").toString(),
+                    h -> h.is(CHEMIST_POI.getKey()), h -> h.is(CHEMIST_POI.getKey()),
+                    ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CLERIC));
 
     private static Set<BlockState> states(Block block) {
         return ImmutableSet.copyOf(block.getStateDefinition().getPossibleStates());

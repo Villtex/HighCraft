@@ -16,7 +16,7 @@ import net.neoforged.neoforge.event.village.WandererTradesEvent;
 import java.util.List;
 import java.util.function.Supplier;
 
-/** Trades of the dealer, the grower and the wandering trader. */
+/** Trades of the dealer, the grower, the chemist and the wandering trader. */
 public final class ModTrades {
     private ModTrades() {}
 
@@ -65,6 +65,32 @@ public final class ModTrades {
             t.get(4).add(buy(ModItems.CRYSTAL_METH, 1, 9, 10, 20));
             t.get(4).add(sell(ModItems.PRECURSOR, 2, 6, 8, 15));
             t.get(5).add(sell(ModItems.HAZMAT_SUIT, 1, 14, 3, 25));
+        } else if (event.getType() == ModVillagers.CHEMIST.get()) {
+            // novice: basic lab supplies, buys glass bottles and coal
+            t.get(1).add(buy(() -> Items.GLASS_BOTTLE, 9, 1, 16, 2));
+            t.get(1).add(buy(() -> Items.COAL, 15, 1, 16, 2));
+            t.get(1).add(sell(ModItems.SOLVENT, 2, 2, 12, 1));
+            t.get(1).add(sell(ModItems.LAB_TILES, 8, 1, 16, 1));
+            // apprentice: reagents, lab furniture
+            t.get(2).add(sell(ModItems.REAGENT, 1, 3, 12, 5));
+            t.get(2).add(sell(ModItems.GLASSWARE_SHELF, 1, 2, 12, 5));
+            t.get(2).add(sell(ModItems.LAB_COUNTER, 2, 3, 12, 5));
+            t.get(2).add(buy(() -> Items.SUGAR, 20, 1, 16, 5));
+            // journeyman: precursor chemicals, ventilation, safety gear
+            t.get(3).add(sell(ModItems.CATALYST, 2, 4, 10, 10));
+            t.get(3).add(sell(ModItems.FUME_HOOD, 1, 8, 4, 10));
+            t.get(3).add(sell(ModItems.GAS_MASK, 1, 5, 6, 10));
+            t.get(3).add(buy(ModItems.MDMA_POWDER, 2, 5, 10, 15));
+            // expert: precursor, exhaust fan, hazmat parts, buys finished crystals
+            t.get(4).add(sell(ModItems.PRECURSOR, 2, 5, 8, 15));
+            t.get(4).add(sell(ModItems.EXHAUST_FAN, 1, 6, 4, 15));
+            t.get(4).add(sell(ModItems.HAZMAT_BOOTS, 1, 6, 4, 15));
+            t.get(4).add(sell(ModItems.HAZMAT_PANTS, 1, 8, 4, 15));
+            t.get(4).add(buy(ModItems.CRYSTAL_METH, 1, 8, 10, 20));
+            // master: the full suit and the lab machines themselves
+            t.get(5).add(sell(ModItems.HAZMAT_SUIT, 1, 12, 3, 30));
+            t.get(5).add(sell(ModItems.CRYSTALLIZER, 1, 20, 2, 30));
+            t.get(5).add(sell(ModItems.PILL_PRESS, 1, 18, 2, 30));
         } else if (event.getType() == ModVillagers.GROWER.get()) {
             t.get(1).add(buy(ModItems.CANNABIS_LEAF, 12, 1, 16, 2));
             t.get(1).add(buy(ModItems.TOBACCO_LEAF, 10, 1, 16, 2));

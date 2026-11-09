@@ -859,6 +859,49 @@ def grower_villager():
     box_uv(cv, 40, 38, 8, 4, 4, {'right': hexc('#8a6a3a'), 'left': hexc('#8a6a3a')})
     return cv
 
+def chemist_villager():
+    """White lab coat over the robe, safety goggles, purple nitrile gloves, pens in the breast pocket."""
+    cv = Canvas(64, 64)
+    coat, coat_d = '#e8ecef', '#c4cad0'
+    # goggles over the eyes (head front 8..15 x 8..17) with the strap around the head
+    for x in range(8, 16):
+        cv.set(x, 11, hexc('#3a4046'))
+        cv.set(x, 14, hexc('#3a4046'))
+    for x in (8, 15):
+        for y in (12, 13):
+            cv.set(x, y, hexc('#3a4046'))
+    for x in (9, 10, 13, 14):
+        for y in (12, 13):
+            cv.set(x, y, hexc('#8fe0d0') if y == 12 else hexc('#5ab8a8'))
+    for x in (11, 12):
+        for y in (12, 13):
+            cv.set(x, y, hexc('#3a4046'))
+    for x in list(range(0, 8)) + list(range(16, 24)):      # strap on the sides of the head
+        cv.set(x, 12, hexc('#2a2e33'))
+    for x in range(24, 32):                                  # and on the back
+        cv.set(x, 12, hexc('#2a2e33'))
+    # lab coat: body (16,20; 8x12x6) and the long robe (0,38; 8x20x6)
+    faces = ['top', 'bottom', 'right', 'front', 'left', 'back']
+    box_uv(cv, 16, 20, 8, 12, 6, {k: noisy(coat, 50 + i, 0.06) for i, k in enumerate(faces)})
+    box_uv(cv, 0, 38, 8, 20, 6, {k: noisy(coat, 60 + i, 0.06) for i, k in enumerate(faces[:1] + faces[2:])})
+    def coat_front(cv, x0, y0, w, h):
+        noisy(coat, 70, 0.06)(cv, x0, y0, w, h)
+        for y in range(y0, y0 + h):                          # opening of the coat + buttons
+            cv.set(x0 + 4, y, hexc(coat_d))
+        for y in range(y0 + 3, y0 + h - 2, 4):
+            cv.set(x0 + 3, y, hexc('#9aa2aa'))
+        cv.rect(x0 + 5, y0 + 2, x0 + 6, y0 + 3, hexc(coat_d))       # breast pocket
+        cv.set(x0 + 5, y0 + 1, hexc('#2a5ad0')); cv.set(x0 + 6, y0 + 1, hexc('#d03a3a'))   # pens
+        cv.rect(x0 + 1, y0 + 2, x0 + 2, y0 + 2, hexc('#3a7ad0'))    # name badge
+    box_uv(cv, 0, 38, 8, 20, 6, {'front': coat_front})
+    box_uv(cv, 16, 20, 8, 12, 6, {'front': lambda cv, x0, y0, w, h: coat_front(cv, x0, y0, w, h)})
+    # sleeves (44,22; 4x8x4) and crossed arms (40,38; 8x4x4) with purple gloves on the hands
+    box_uv(cv, 44, 22, 4, 8, 4, {k: noisy(coat, 80 + i, 0.06) for i, k in enumerate(faces)})
+    box_uv(cv, 40, 38, 8, 4, 4, {k: noisy(coat, 90 + i, 0.06) for i, k in enumerate(faces)})
+    box_uv(cv, 44, 22, 4, 8, 4, {'bottom': hexc('#6a4fc8')})
+    box_uv(cv, 40, 38, 8, 4, 4, {'right': hexc('#6a4fc8'), 'left': hexc('#6a4fc8')})
+    return cv
+
 if __name__ == '__main__':
     items = [(n, f()) for n, f in [('grinder_side', grinder_side), ('grinder_front', grinder_front), ('grinder_on', lambda: grinder_front(True)),
              ('millstone', millstone), ('millstone_top', millstone_top), ('extr_base', extractor_base), ('extr_front', lambda: extractor_base(True)),

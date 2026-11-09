@@ -217,7 +217,7 @@ def tags():
     tag('minecraft/tags/block/maintains_farmland.json', [it(b) for b in ('cannabis_crop', 'tobacco_crop', 'poppy_crop', 'coca_bush')])
     tag('minecraft/tags/block/sword_efficient.json', [it(b) for b in ('cannabis_crop', 'tobacco_crop', 'poppy_crop', 'coca_bush', 'wild_cannabis', 'wild_tobacco', 'wild_coca', 'wild_poppy')])
     tag('minecraft/tags/block/replaceable_by_trees.json', [it(b) for b in ('wild_cannabis', 'wild_tobacco', 'wild_coca', 'wild_poppy')])
-    tag('minecraft/tags/point_of_interest_type/acquirable_job_site.json', [f'{NS}:dealer', f'{NS}:grower'])
+    tag('minecraft/tags/point_of_interest_type/acquirable_job_site.json', [f'{NS}:dealer', f'{NS}:grower', f'{NS}:chemist'])
     tag('c/tags/item/seeds.json', [it(i) for i in ('cannabis_seeds', 'tobacco_seeds', 'coca_seeds', 'poppy_seeds')])
     tag('c/tags/item/crops.json', [it(i) for i in ('cannabis_bud', 'tobacco_leaf', 'coca_leaves', 'poppy_pod')])
     tag(f'{NS}/tags/item/smokables.json', [it(i) for i in ('ground_cannabis', 'cut_tobacco', 'opium')])

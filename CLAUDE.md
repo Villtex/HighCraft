@@ -24,7 +24,10 @@ See `README.md` for features and the changelog. Current version: see `gradle.pro
 ## Build & test
 - `./gradlew build` -> `build/libs/highcraft-neoforge-1.21.1-<v>.jar` and `highcraft_create-neoforge-1.21.1-<v>.jar`.
 - Headless client: `Xvfb :99 &`, `DISPLAY=:99 LIBGL_ALWAYS_SOFTWARE=1 ./gradlew runClient -Pdevtest -PdevtestOnly=<mode>`;
-  modes: `all`, `effects`, `items`, `iris`, `create` (needs `-Puse_create_in_dev=true`), `lab`, `tent`, `icons`. Screenshots land in
+  modes: `all`, `effects`, `items`, `iris`, `create` (needs `-Puse_create_in_dev=true`), `lab`, `tent`, `icons`,
+  `structures` (village lab templates side by side + labs in real villages), `villages` (only the real villages).
+  Fresh checkout: DevTest creates the flat quick-play world `run/saves/hctest` itself and skips the first-start
+  accessibility screen (no dedicated server / EULA file needed). Screenshots land in
   `run/screenshots/hc_*.png`, results in `run/logs/latest.log` (grep `[DevTest]`). In DevTest, `step(delay, action)` runs the
   action and THEN waits `delay` ticks.
 - Optional dev mods via gradle.properties flags: `use_sodium_in_dev`, `use_iris_in_dev`, `use_create_in_dev`.
@@ -38,6 +41,8 @@ See `README.md` for features and the changelog. Current version: see `gradle.pro
 - New MachineType entries must be added to: `MachineType`, `MachineRecipe.Kind`, `ModRecipes`, `ModBlocks`, `ModBlockEntities`
   (switch), `MachineBlock` (shape/BE/particles), `ModMenus`, `HighCraftClient` screens, `ModCapabilities`, the JEI plugin, and
   `MACHINE_LAYOUT` in `tools/tex_blocks.py` (GUI texture).
+- Village pieces are placed with "known shape" (no neighbour updates): every pane/stair/fence state in `gen_structures.py` must
+  already be final (`/place template` does update shapes, so it can look better than a real village - check `s_village_*` shots).
 - Per-tick block entity state (progress, energy, burn time) uses `markUnsaved()` (`level.blockEntityChanged`), not `setChanged()`:
   NeoForge's `setChanged` -> `updateNeighbourForOutputSignal` calls `onNeighborChange` on all 6 neighbours. Inventory changes keep
   `setChanged()` (comparators).
@@ -46,6 +51,5 @@ See `README.md` for features and the changelog. Current version: see `gradle.pro
 - The grow tent is 2 blocks tall (`GrowTentBlock`, `half` property): only the lower half has the BE; the upper half forwards
   clicks/comparator/capabilities (`ModCapabilities` registerBlock) and must `invalidateCapabilities` on place/remove.
 - `gen_data.py` rewrites the village lab `.nbt` files with a new gzip timestamp - if their content didn't change, `git checkout` them.
-- Fresh checkout: DevTest creates the flat `hctest` world itself if it doesn't exist (mode `tent` tests the 2-block tent).
 - The user's target is a large Fantasy modpack (~200 mods: Create 6.0.10, Sodium 0.8, Iris, ModernFix, Sinytra Connector,
   More Culling, Sable/Veil, FancyMenu). Test risky changes against such mods.
