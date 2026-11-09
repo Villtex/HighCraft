@@ -70,8 +70,19 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
                 return isValidForSlot(slot, stack);
             }
         };
-        this.energy = new MachineEnergyStorage(MachineType.ENERGY_CAPACITY, 400, this::setChanged);
+        // Energy is not part of the comparator signal -> no neighbour updates needed
+        this.energy = new MachineEnergyStorage(MachineType.ENERGY_CAPACITY, 400, this::markUnsaved);
         this.automation = new AutomationItemHandler(inventory, this::canAutomationExtract);
+    }
+
+    /**
+     * Marks the chunk for saving without {@link #setChanged()}'s neighbour updates. {@code setChanged()} also calls
+     * {@code updateNeighbourForOutputSignal}, which NeoForge forwards as {@code onNeighborChange} to all six neighbours -
+     * pipes and cables of other mods react to that. Use this for per-tick state (progress, energy, burn time);
+     * inventory changes still go through {@code setChanged()} so comparators update.
+     */
+    protected void markUnsaved() {
+        if (level != null) level.blockEntityChanged(worldPosition);
     }
 
     public MachineType machine() { return machine; }
@@ -109,25 +120,47 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
         }
     }
 
-    /** Inserts a stack into the output slots (without slot validation). */
-    protected boolean insertOutput(ItemStack stack, boolean simulate) {
+    /** True if the whole stack fits into the output slots. Allocation-free (called every tick). */
+    protected boolean canFitOutput(ItemStack stack) {
+        int remaining = stack.getCount();
+        for (int s = machine.firstOutputSlot(); s < machine.slotCount() && remaining > 0; s++) {
+            ItemStack existing = inventory.getStackInSlot(s);
+            if (existing.isEmpty()) return true;
+            if (ItemStack.isSameItemSameComponents(existing, stack)) {
+                remaining -= Math.max(0, existing.getMaxStackSize() - existing.getCount());
+            }
+        }
+        return remaining <= 0;
+    }
+
+    /**
+     * Inserts a stack into the output slots (without slot validation).
+     *
+     * @return what did not fit (empty if everything was inserted) - callers must not drop it silently
+     */
+    protected ItemStack insertOutput(ItemStack stack) {
         ItemStack remaining = stack.copy();
         for (int s = machine.firstOutputSlot(); s < machine.slotCount() && !remaining.isEmpty(); s++) {
             ItemStack existing = inventory.getStackInSlot(s);
             if (existing.isEmpty()) {
-                if (!simulate) inventory.setStackInSlot(s, remaining.copy());
-                remaining = ItemStack.EMPTY;
-            } else if (ItemStack.isSameItemSameComponents(existing, remaining)) {
-                int space = existing.getMaxStackSize() - existing.getCount();
-                int move = Math.min(space, remaining.getCount());
+                inventory.setStackInSlot(s, remaining);
+                return ItemStack.EMPTY;
+            }
+            if (ItemStack.isSameItemSameComponents(existing, remaining)) {
+                int move = Math.min(existing.getMaxStackSize() - existing.getCount(), remaining.getCount());
                 if (move > 0) {
-                    if (!simulate) existing.grow(move);
+                    // Via setStackInSlot (not grow in place) so onContentsChanged/comparators fire
+                    inventory.setStackInSlot(s, existing.copyWithCount(existing.getCount() + move));
                     remaining.shrink(move);
                 }
             }
         }
-        if (!simulate) setChanged();
-        return remaining.isEmpty();
+        return remaining;
+    }
+
+    /** Safety net for output that unexpectedly doesn't fit - spit it out instead of deleting it. */
+    protected void dropOverflow(ItemStack stack) {
+        if (level != null && !stack.isEmpty()) net.minecraft.world.level.block.Block.popResource(level, worldPosition.above(), stack);
     }
 
     public void dropContents(Level level, BlockPos pos) {

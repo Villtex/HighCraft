@@ -23,6 +23,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -64,9 +65,10 @@ public final class LabSafety {
 
     /** True if a fume hood or exhaust fan is within {@link #VENT_RADIUS} blocks. */
     public static boolean isVentilated(Level level, BlockPos pos) {
+        Block hood = ModBlocks.FUME_HOOD.get(), fan = ModBlocks.EXHAUST_FAN.get();
         for (BlockPos p : BlockPos.betweenClosed(pos.offset(-VENT_RADIUS, -2, -VENT_RADIUS), pos.offset(VENT_RADIUS, 3, VENT_RADIUS))) {
-            BlockState s = level.getBlockState(p);
-            if (s.is(ModBlocks.FUME_HOOD.get()) || s.is(ModBlocks.EXHAUST_FAN.get())) return true;
+            Block b = level.getBlockState(p).getBlock();
+            if (b == hood || b == fan) return true;
         }
         return false;
     }

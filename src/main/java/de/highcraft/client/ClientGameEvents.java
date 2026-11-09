@@ -36,7 +36,8 @@ public final class ClientGameEvents {
         if (mc.isPaused()) return;
         DrugVisuals.tick();
         LocalPlayer player = mc.player;
-        if (player == null || mc.level == null) return;
+        // Sober (the usual case): nothing to spawn or play
+        if (player == null || mc.level == null || !DrugVisuals.anyActive()) return;
         RandomSource r = player.getRandom();
 
         float trip = Math.max(DrugVisuals.get(DrugVisuals.TRIP, 1f), DrugVisuals.get(DrugVisuals.ACID, 1f) * 1.5f);

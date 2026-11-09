@@ -68,8 +68,43 @@ public class DevTest {
         });
     }
 
+    private boolean worldRequested;
+
+    /**
+     * Fresh checkout: the quick-play world "hctest" doesn't exist yet (quick play then shows an error screen).
+     * Create it through the normal client world creation - a flat creative world with cheats.
+     */
+    private void createTestWorld(Minecraft mc) {
+        worldRequested = true;
+        HighCraft.LOGGER.info("[DevTest] world 'hctest' missing - creating a flat test world");
+        var rules = new net.minecraft.world.level.GameRules();
+        var settings = new net.minecraft.world.level.LevelSettings("hctest", net.minecraft.world.level.GameType.CREATIVE, false,
+                net.minecraft.world.Difficulty.PEACEFUL, true, rules, net.minecraft.world.level.WorldDataConfiguration.DEFAULT);
+        mc.createWorldOpenFlows().createFreshLevel("hctest", settings,
+                new net.minecraft.world.level.levelgen.WorldOptions(1L, false, false),
+                registries -> registries.registryOrThrow(net.minecraft.core.registries.Registries.WORLD_PRESET)
+                        .getHolderOrThrow(net.minecraft.world.level.levelgen.presets.WorldPresets.FLAT).value().createWorldDimensions(),
+                new net.minecraft.client.gui.screens.TitleScreen());
+    }
+
     private void onTick(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null && !worldRequested && mc.getOverlay() == null && mc.screen != null) {
+            if (mc.screen instanceof net.minecraft.client.gui.screens.AccessibilityOnboardingScreen) {
+                // First launch of a fresh run dir: the onboarding screen blocks quick play - skip it and open the world
+                mc.options.onboardAccessibility = false;
+                mc.options.save();
+                if (mc.getLevelSource().levelExists("hctest")) {
+                    worldRequested = true;
+                    mc.createWorldOpenFlows().openWorld("hctest", () -> mc.setScreen(new net.minecraft.client.gui.screens.TitleScreen()));
+                    return;
+                }
+            }
+            if (!mc.getLevelSource().levelExists("hctest")) {
+                createTestWorld(mc);
+                return;
+            }
+        }
         if (mc.level == null || mc.player == null || mc.getSingleplayerServer() == null) return;
         if (++ticks < 60) return;
         if (wait > 0) { wait--; return; }
@@ -143,14 +178,16 @@ public class DevTest {
             c.add(setb(4, Y + 1, z, "highcraft:extractor[facing=north,lit=true]"));
             c.add(setb(6, Y + 1, z, "highcraft:lab_station[facing=north,lit=true]"));
             c.add(setb(8, Y + 1, z, "highcraft:press[facing=north,lit=false]"));
-            c.add(setb(10, Y + 1, z, "highcraft:grow_tent[facing=north,lit=true]"));
+            c.add(setb(10, Y + 1, z, "highcraft:grow_tent[facing=north,half=lower,lit=true]"));
+            c.add(setb(10, Y + 2, z, "highcraft:grow_tent[facing=north,half=upper,lit=true]"));
             c.add(setb(12, Y + 1, z, "highcraft:bong[facing=north,water=true,load=cannabis]"));
             c.add(setb(14, Y + 1, z, "highcraft:precision_scale[facing=north]"));
             c.add(setb(2, Y + 1, z + 3, "highcraft:grinder[facing=north,lit=false]"));
             c.add(setb(4, Y + 1, z + 3, "highcraft:extractor[facing=north,lit=false]"));
             c.add(setb(6, Y + 1, z + 3, "highcraft:lab_station[facing=north,lit=false]"));
             c.add(setb(8, Y + 1, z + 3, "highcraft:press[facing=north,lit=true]"));
-            c.add(setb(10, Y + 1, z + 3, "highcraft:grow_tent[facing=north,lit=false]"));
+            c.add(setb(10, Y + 1, z + 3, "highcraft:grow_tent[facing=north,half=lower,lit=false]"));
+            c.add(setb(10, Y + 2, z + 3, "highcraft:grow_tent[facing=north,half=upper,lit=false]"));
             c.add(setb(12, Y + 1, z + 3, "highcraft:bong[facing=north,water=false,load=empty]"));
             // Grow lamp above the cannabis
             c.add(setb(14, Y + 4, 0, "highcraft:grow_lamp"));
@@ -190,6 +227,7 @@ public class DevTest {
         if ("iris".equals(System.getProperty("highcraft.devtest.only"))) { irisTest(); return; }
         if ("create".equals(System.getProperty("highcraft.devtest.only"))) { createTest(); return; }
         if ("lab".equals(System.getProperty("highcraft.devtest.only"))) { labTest(); return; }
+        if ("tent".equals(System.getProperty("highcraft.devtest.only"))) { tentTest(); return; }
         step(140, mc -> tp(mc, 7.5, Y + 6.5, -7.0, 0f, 32f));
         waitUntil(mc -> mc.player.getY() > Y + 2);
         step(60, mc -> {});
@@ -559,6 +597,157 @@ public class DevTest {
                 "INPUT".equals(role) ? mezz.jei.api.recipe.RecipeIngredientRole.INPUT : mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT,
                 mezz.jei.api.constants.VanillaTypes.ITEM_STACK, new ItemStack(item));
         rt.getRecipesGui().show(focus);
+    }
+
+    private static void check(String what, boolean ok, Object detail) {
+        HighCraft.LOGGER.info("[DevTest] {} {} ({})", ok ? "PASS" : "FAIL", what, detail);
+    }
+
+    private static int progressOf(Object be) {
+        try {
+            Field f = de.highcraft.block.entity.AbstractMachineBlockEntity.class.getDeclaredField("progress");
+            f.setAccessible(true);
+            return f.getInt(be);
+        } catch (Exception e) { return -1; }
+    }
+
+    private static int countItems(ServerLevel level, BlockPos around, net.minecraft.world.item.Item item) {
+        int n = 0;
+        for (var e : level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(around).inflate(3))) {
+            if (e.getItem().is(item)) n += e.getItem().getCount();
+        }
+        return n;
+    }
+
+    /** Two-block grow tent + machine notification fixes (mode "tent"). */
+    private void tentTest() {
+        final int z = 32;
+        final BlockPos lit = new BlockPos(30, Y + 1, z), dark = new BlockPos(32, Y + 1, z), legacy = new BlockPos(34, Y + 1, z),
+                blocked = new BlockPos(36, Y + 1, z), work = new BlockPos(38, Y + 1, z), press = new BlockPos(30, Y + 1, z + 5),
+                control = new BlockPos(32, Y + 1, z + 5);
+        step(10, mc -> {
+            for (String c : new String[]{
+                    setb(30, Y + 1, z, "highcraft:grow_tent[facing=north,half=lower,lit=true]"),
+                    setb(30, Y + 2, z, "highcraft:grow_tent[facing=north,half=upper,lit=true]"),
+                    setb(32, Y + 1, z, "highcraft:grow_tent[facing=north,half=lower,lit=false]"),
+                    setb(32, Y + 2, z, "highcraft:grow_tent[facing=north,half=upper,lit=false]"),
+                    setb(34, Y + 1, z, "highcraft:grow_tent[facing=north,half=lower,lit=false]"),   // pre-1.2.1 tent: gets its roof
+                    setb(36, Y + 2, z, "minecraft:stone"),
+                    setb(36, Y + 1, z, "highcraft:grow_tent[facing=north,half=lower,lit=false]"),   // pre-1.2.1 tent without room
+                    setb(38, Y + 1, z, "highcraft:grow_tent[facing=north,half=lower,lit=false]"),
+                    setb(38, Y + 2, z, "highcraft:grow_tent[facing=north,half=upper,lit=false]"),
+                    setb(30, Y + 1, z + 5, "highcraft:press[facing=north,lit=false]"),
+                    setb(32, Y + 1, z + 5, "highcraft:press[facing=north,lit=false]")}) cmd(mc, c);
+            tp(mc, 31.5, Y + 1, z + 3.0, 0f, 20f); // within reach of the presses, else stillValid closes the menu
+        });
+        step(40, mc -> mc.getSingleplayerServer().execute(() -> {
+            ServerLevel level = mc.getSingleplayerServer().overworld();
+            check("legacy tent got its roof", de.highcraft.block.GrowTentBlock.hasUpperHalf(level, legacy), level.getBlockState(legacy.above()));
+            check("legacy tent without room survives", level.getBlockState(blocked).is(ModBlocks.GROW_TENT.get())
+                    && level.getBlockState(blocked.above()).is(net.minecraft.world.level.block.Blocks.STONE), level.getBlockState(blocked));
+            check("upper half has no block entity", level.getBlockEntity(work.above()) == null, level.getBlockEntity(work.above()));
+            var items = level.getCapability(net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK, work.above(), Direction.UP);
+            var energy = level.getCapability(net.neoforged.neoforge.capabilities.Capabilities.EnergyStorage.BLOCK, work.above(), Direction.UP);
+            check("item capability on the roof", items != null, items);
+            check("energy capability on the roof", energy != null, energy);
+            if (items != null && energy != null) {
+                ItemStack rest = items.insertItem(GrowTentBlockEntity.SLOT_SEED, new ItemStack(ModItems.CANNABIS_SEEDS.get(), 4), false);
+                items.insertItem(GrowTentBlockEntity.SLOT_WATER, new ItemStack(net.minecraft.world.item.Items.WATER_BUCKET), false);
+                for (int i = 0; i < 50; i++) energy.receiveEnergy(400, false);
+                check("seeds inserted through the roof", rest.isEmpty(), rest);
+            }
+            // Press: 1 resin (recipe needs 2), then shift-click more in -> must start (in-place merge notification)
+            if (level.getBlockEntity(control) instanceof de.highcraft.block.entity.AbstractMachineBlockEntity c) {
+                c.inventory().setStackInSlot(0, new ItemStack(ModItems.CANNABIS_RESIN.get(), 1));
+                for (int i = 0; i < 10; i++) c.energyStorage().receiveEnergy(400, false);
+            }
+            if (level.getBlockEntity(press) instanceof de.highcraft.block.entity.AbstractMachineBlockEntity be) {
+                be.inventory().setStackInSlot(0, new ItemStack(ModItems.CANNABIS_RESIN.get(), 1));
+                for (int i = 0; i < 10; i++) be.energyStorage().receiveEnergy(400, false);
+                var sp = mc.getSingleplayerServer().getPlayerList().getPlayers().get(0);
+                sp.getInventory().setItem(0, new ItemStack(ModItems.CANNABIS_RESIN.get(), 5));
+                sp.openMenu(be, buf -> buf.writeBlockPos(press));
+            }
+        }));
+        step(40, mc -> mc.getSingleplayerServer().execute(() -> {
+            ServerLevel level = mc.getSingleplayerServer().overworld();
+            var tent = level.getBlockEntity(work);
+            check("tent grows (powered)", progressOf(tent) > 0, progressOf(tent));
+            check("lamp on in the lower half", level.getBlockState(work).getValue(de.highcraft.block.MachineBlock.LIT), level.getBlockState(work));
+            check("roof mirrors the lamp", level.getBlockState(work.above()).getValue(de.highcraft.block.MachineBlock.LIT), level.getBlockState(work.above()));
+            var pressBe = level.getBlockEntity(press);
+            check("press idle with 1 resin", progressOf(pressBe) == 0, progressOf(pressBe));
+            var sp = mc.getSingleplayerServer().getPlayerList().getPlayers().get(0);
+            check("press menu open", sp.containerMenu instanceof de.highcraft.menu.MachineMenu, sp.containerMenu);
+            if (sp.containerMenu instanceof de.highcraft.menu.MachineMenu menu) {
+                menu.quickMoveStack(sp, menu.machineSlotCount() + 27); // hotbar slot 0 -> merges into the input stack
+            }
+            // Control: the same in-place merge through a plain NeoForge SlotItemHandler (= behaviour before the fix)
+            var c = (de.highcraft.block.entity.AbstractMachineBlockEntity) level.getBlockEntity(control);
+            var plain = new net.neoforged.neoforge.items.SlotItemHandler(c.inventory(), 0, 0, 0);
+            plain.getItem().grow(4);
+            plain.setChanged();
+        }));
+        step(40, mc -> mc.getSingleplayerServer().execute(() -> {
+            ServerLevel level = mc.getSingleplayerServer().overworld();
+            var pressBe = (de.highcraft.block.entity.AbstractMachineBlockEntity) level.getBlockEntity(press);
+            check("press runs after shift-click merge", progressOf(pressBe) > 0,
+                    "progress=" + progressOf(pressBe) + " input=" + pressBe.inventory().getStackInSlot(0));
+            var c = (de.highcraft.block.entity.AbstractMachineBlockEntity) level.getBlockEntity(control);
+            check("control: plain SlotItemHandler merge is not seen (the old bug)", progressOf(c) == 0,
+                    "progress=" + progressOf(c) + " input=" + c.inventory().getStackInSlot(0));
+            mc.getSingleplayerServer().getPlayerList().getPlayers().get(0).closeContainer();
+        }));
+        // Screenshots: client side plant display, then front view and close-up
+        step(10, mc -> {
+            setTent(mc, lit, ModBlocks.CANNABIS_CROP.get(), 0.95f);
+            setTent(mc, dark, ModBlocks.TOBACCO_CROP.get(), 0.9f);
+            setTent(mc, legacy, ModBlocks.POPPY_CROP.get(), 0.6f);
+            mc.options.hideGui = true;
+            tp(mc, 34.5, Y + 2.2, z - 6.5, 0f, 6f);
+        });
+        waitUntil(mc -> mc.player.getZ() > z - 8 && mc.player.getZ() < z - 5);
+        step(60, mc -> {});
+        step(20, mc -> shot(mc, "70_tents_front"));
+        step(30, mc -> tp(mc, 30.5, Y + 1.5, z - 2.4, 0f, 12f));
+        step(30, mc -> shot(mc, "71_tent_cannabis_close"));
+        step(30, mc -> tp(mc, 27.5, Y + 3.6, z - 3.5, -35f, 30f));
+        step(30, mc -> shot(mc, "72_tents_above"));
+        // Item: hotbar icon + first person, third person
+        step(10, mc -> { mc.options.hideGui = false; tp(mc, 33.5, Y + 1.0, z - 9.0, 0f, 10f);
+            cmd(mc, "item replace entity Dev weapon.mainhand with highcraft:grow_tent"); });
+        step(40, mc -> shot(mc, "73_tent_item_hand"));
+        step(5, mc -> mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_FRONT));
+        step(40, mc -> shot(mc, "74_tent_item_thirdperson"));
+        step(5, mc -> mc.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON));
+        // Breaking: survival on the roof drops exactly one tent + the contents; creative drops nothing
+        step(10, mc -> { cmd(mc, "gamemode survival Dev"); cmd(mc, "kill @e[type=item]"); });
+        step(10, mc -> mc.getSingleplayerServer().execute(() -> {
+            var sp = mc.getSingleplayerServer().getPlayerList().getPlayers().get(0);
+            sp.gameMode.destroyBlock(work.above());
+        }));
+        step(10, mc -> mc.getSingleplayerServer().execute(() -> {
+            ServerLevel level = mc.getSingleplayerServer().overworld();
+            check("survival: both halves gone", level.getBlockState(work).isAir() && level.getBlockState(work.above()).isAir(),
+                    level.getBlockState(work) + " / " + level.getBlockState(work.above()));
+            int tents = countItems(level, work, ModItems.GROW_TENT.get());
+            check("survival: exactly one tent dropped", tents == 1, tents);
+            check("survival: contents dropped", countItems(level, work, ModItems.CANNABIS_SEEDS.get()) >= 3,
+                    countItems(level, work, ModItems.CANNABIS_SEEDS.get()));
+        }));
+        step(10, mc -> { cmd(mc, "gamemode creative Dev"); cmd(mc, "kill @e[type=item]"); });
+        step(10, mc -> mc.getSingleplayerServer().execute(() -> {
+            var sp = mc.getSingleplayerServer().getPlayerList().getPlayers().get(0);
+            sp.gameMode.destroyBlock(dark.above());
+        }));
+        step(10, mc -> mc.getSingleplayerServer().execute(() -> {
+            ServerLevel level = mc.getSingleplayerServer().overworld();
+            check("creative: both halves gone", level.getBlockState(dark).isAir() && level.getBlockState(dark.above()).isAir(),
+                    level.getBlockState(dark) + " / " + level.getBlockState(dark.above()));
+            int tents = countItems(level, dark, ModItems.GROW_TENT.get());
+            check("creative: no tent dropped", tents == 0, tents);
+        }));
+        step(20, mc -> { HighCraft.LOGGER.info("[DevTest] tent test done - quitting"); mc.stop(); });
     }
 
     private void handTest() {

@@ -154,10 +154,25 @@ public abstract class HighCropBlock extends CropBlock {
 
     // ---------------- Shape ----------------
 
+    /**
+     * One shape per age, built on first use (getShape runs for outlines, raycasts and culling - no allocation per call).
+     * Volatile: chunk meshing (e.g. Sodium) queries shapes off-thread, the array must be published fully built.
+     */
+    private volatile VoxelShape[] shapeByAge;
+
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        float progress = (getAge(state) + 1) / (float) (getMaxAge() + 1);
-        return Block.box(1, 0, 1, 15, Math.max(2, Math.round(16 * progress)), 15);
+        VoxelShape[] shapes = shapeByAge;
+        if (shapes == null) {
+            int max = getMaxAge();
+            shapes = new VoxelShape[max + 1];
+            for (int age = 0; age <= max; age++) {
+                float progress = (age + 1) / (float) (max + 1);
+                shapes[age] = Block.box(1, 0, 1, 15, Math.max(2, Math.min(16, Math.round(16 * progress))), 15);
+            }
+            shapeByAge = shapes;
+        }
+        return shapes[Math.max(0, Math.min(shapes.length - 1, getAge(state)))];
     }
 
     public IntegerProperty ageProperty() {

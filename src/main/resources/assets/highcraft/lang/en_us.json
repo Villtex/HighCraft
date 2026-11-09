@@ -227,7 +227,7 @@
   "jei.highcraft.info.fertilizer": "On HighCraft crops: +1 growth stage, +50%% growth speed and +1 harvest quality. Acts like bone meal on other plants.",
   "jei.highcraft.info.gas_mask": "Protects against toxic lab fumes. The full hazmat set (gas mask, suit, pants, boots) also makes you immune to lab accidents.",
   "jei.highcraft.info.grow_lamp": "Bright light that speeds up crops up to 5 blocks below (5×5). Counts as ideal light for harvest quality and lights nearby grow tents.",
-  "jei.highcraft.info.grow_tent": "Grows crops independent of weather: insert seeds, water buckets and optionally fertilizer. Light comes from FE power, a nearby grow lamp, or open sky during the day.",
+  "jei.highcraft.info.grow_tent": "Two blocks tall (needs a free block above). Grows crops independent of weather: insert seeds, water buckets and optionally fertilizer. Light comes from FE power, a nearby grow lamp, or open sky during the day. Hoppers and cables work on both halves.",
   "jei.highcraft.info.lighter": "Smokables, pipes and bongs need a lighter or flint and steel in your inventory.",
   "jei.highcraft.info.lsd": "LSD blotters cause a very long, kaleidoscopic trip. Barely addictive, but tolerance builds quickly.",
   "jei.highcraft.info.machines": "Machines run on fuel (like a furnace) or FE power. Hoppers and pipes: insert from top/sides, extract from the bottom.",

@@ -138,8 +138,10 @@ def self_drop(name):
     table(name, [pool([entry(name)], [{'condition': 'minecraft:survives_explosion'}])])
 
 def loot():
-    for b in ('drying_rack', 'grinder', 'extractor', 'lab_station', 'press', 'grow_tent', 'grow_lamp', 'bong', 'precision_scale'):
+    for b in ('drying_rack', 'grinder', 'extractor', 'lab_station', 'press', 'grow_lamp', 'bong', 'precision_scale'):
         self_drop(b)
+    # Two blocks tall: only the lower half drops the tent
+    table('grow_tent', [pool([entry('grow_tent')], [{'condition': 'minecraft:survives_explosion'}, cond_state('grow_tent', {'half': 'lower'})])])
     lower = {'half': 'lower'}
     mature_c = cond_state('cannabis_crop', {'age': '7', 'half': 'lower'})
     table('cannabis_crop', [

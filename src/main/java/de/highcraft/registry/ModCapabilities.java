@@ -1,6 +1,8 @@
 package de.highcraft.registry;
 
+import de.highcraft.block.GrowTentBlock;
 import de.highcraft.block.entity.AbstractMachineBlockEntity;
+import de.highcraft.block.entity.GrowTentBlockEntity;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
@@ -18,6 +20,13 @@ public final class ModCapabilities {
         }
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.GROW_TENT.get(), (be, side) -> be.automationHandler());
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.GROW_TENT.get(), AbstractMachineBlockEntity::energyStorageFor);
+        // Upper half of the grow tent (no block entity): forward to the lower half, so hoppers/cables on the roof keep working
+        event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, be, side) ->
+                GrowTentBlock.isUpper(state) && level.getBlockEntity(pos.below()) instanceof GrowTentBlockEntity tent
+                        ? tent.automationHandler() : null, ModBlocks.GROW_TENT.get());
+        event.registerBlock(Capabilities.EnergyStorage.BLOCK, (level, pos, state, be, side) ->
+                GrowTentBlock.isUpper(state) && level.getBlockEntity(pos.below()) instanceof GrowTentBlockEntity tent
+                        ? tent.energyStorageFor(side) : null, ModBlocks.GROW_TENT.get());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.DRYING_RACK.get(), (be, side) -> be.automationHandler());
     }
 }

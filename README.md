@@ -20,8 +20,8 @@ Supports JEI and is compatible with Sodium and Iris.
 ```
 
 Output in `build/libs/`:
-* `highcraft-neoforge-1.21.1-1.2.0.jar` - the mod
-* `highcraft_create-neoforge-1.21.1-1.2.0.jar` - the Create add-on (only use it together with Create and HighCraft)
+* `highcraft-neoforge-1.21.1-1.2.1.jar` - the mod
+* `highcraft_create-neoforge-1.21.1-1.2.1.jar` - the Create add-on (only use it together with Create and HighCraft)
 
 Testing in the dev environment (`-Pdevtest` additionally runs an automated screenshot scenario):
 
@@ -114,7 +114,7 @@ solvent canister and tea cups also have 3D models for the hand, ground, item fra
 | **Extractor** | with solvent: resin, coca paste, raw opium |
 | **Chemistry lab** | 3 inputs: cocaine, morphine, LSD |
 | **Hydraulic press** | resin -> hashish, hemp fiber -> paper |
-| **Grow tent** | weather-independent growing with water, fertilizer and light (power, lamp or sun); the plant visibly grows inside |
+| **Grow tent** | two blocks tall; weather-independent growing with water, fertilizer and light (power, lamp or sun); the plant visibly grows inside (cannabis to full height). Hoppers and cables work on both halves |
 | **Grow lamp** | light level 15, speeds up crops up to 5 blocks below |
 | **Bong** | fill with water, pack, smoke |
 | **Precision scale** | the dealer's workstation, shows weight and quality |
@@ -168,6 +168,21 @@ Teas, vials and solvent also stand upright on the belt, and the mechanical harve
 * **Large modpacks:** tested in a 200+ mod Fantasy pack (ModernFix, More Culling, Sinytra Connector, Sable/Veil, FancyMenu, Sodium 0.8, Iris 1.8).
 
 ## Changelog
+
+### 1.2.1
+* The **grow tent is now two blocks tall** (new model with roof and lamp in the upper half); a mature cannabis plant grows to full
+  height inside. Placing needs a free block above, breaking either half removes the whole tent, and hoppers, pipes, cables and
+  comparators work on both halves. Tents from older worlds get their roof automatically if there is room above.
+* Performance: machines no longer call `setChanged()` every tick (that notified all six neighbours - pipes and cables of other mods
+  react to it); the processing machines cache recipe, slot assignment and result instead of matching every tick; the drying rack
+  caches its recipes per slot and checks sky/rain/biome once per second instead of every 2 ticks; hopper inserts validate once instead
+  of twice; crop hitboxes, particle options and the grow tent plant are no longer rebuilt on every call; the client skips all drug
+  effect work while sober.
+* Fix: shift-clicking more of an ingredient onto a partial stack (e.g. 1 resin in the press, the recipe needs 2) didn't start the
+  machine - the menu merged the stack in place without notifying it.
+* Fix: grow tent harvests and chemical reactor quality upgrades that didn't fit the output slots were deleted; they now stay in the
+  machine or pop out.
+* `/reload` now refreshes the recipes cached in running machines.
 
 ### 1.2.0
 * New: **meth** and **ecstasy** with their own production chain (fictional in-game chemistry), three new machines (chemical reactor,

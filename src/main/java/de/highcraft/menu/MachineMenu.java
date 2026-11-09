@@ -13,6 +13,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
@@ -37,13 +38,13 @@ public class MachineMenu extends AbstractContainerMenu {
         this.machineSlots = machine.slotCount();
 
         for (int i = 0; i < machine.inputCount(); i++) {
-            addSlot(new SlotItemHandler(handler, i, machine.inputPos[i][0], machine.inputPos[i][1]));
+            addSlot(new MachineSlot(handler, i, machine.inputPos[i][0], machine.inputPos[i][1]));
         }
         if (machine.hasFuel()) {
-            addSlot(new SlotItemHandler(handler, machine.fuelSlot(), machine.fuelPos[0], machine.fuelPos[1]));
+            addSlot(new MachineSlot(handler, machine.fuelSlot(), machine.fuelPos[0], machine.fuelPos[1]));
         }
         for (int i = 0; i < machine.outputCount(); i++) {
-            addSlot(new SlotItemHandler(handler, machine.firstOutputSlot() + i, machine.outputPos[i][0], machine.outputPos[i][1]) {
+            addSlot(new MachineSlot(handler, machine.firstOutputSlot() + i, machine.outputPos[i][0], machine.outputPos[i][1]) {
                 @Override
                 public boolean mayPlace(ItemStack stack) { return false; }
             });
@@ -57,6 +58,25 @@ public class MachineMenu extends AbstractContainerMenu {
             addSlot(new Slot(inv, col, 8 + col * 18, 142));
         }
         addDataSlots(data);
+    }
+
+    /**
+     * Shift-click merges into an existing stack in place ({@code moveItemStackTo} -> {@code grow} + {@code slot.setChanged()}),
+     * but NeoForge's SlotItemHandler doesn't forward setChanged to the handler. Without this the machine never
+     * sees the change - e.g. a press holding 1 resin (recipe needs 2) stayed idle after shift-clicking more resin in.
+     */
+    private static class MachineSlot extends SlotItemHandler {
+        MachineSlot(IItemHandler handler, int index, int x, int y) {
+            super(handler, index, x, y);
+        }
+
+        @Override
+        public void setChanged() {
+            if (getItemHandler() instanceof IItemHandlerModifiable modifiable) {
+                modifiable.setStackInSlot(getContainerSlot(), getItem()); // same stack -> only fires onContentsChanged
+            }
+            super.setChanged();
+        }
     }
 
     public MachineType machine() { return machine; }

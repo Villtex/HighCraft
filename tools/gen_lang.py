@@ -235,7 +235,7 @@ LANG = {
     "jei.highcraft.info.lsd": "LSD blotters cause a very long, kaleidoscopic trip. Barely addictive, but tolerance builds quickly.",
     "jei.highcraft.info.fertilizer": "On HighCraft crops: +1 growth stage, +50% growth speed and +1 harvest quality. Acts like bone meal on other plants.",
     "jei.highcraft.info.grow_lamp": "Bright light that speeds up crops up to 5 blocks below (5×5). Counts as ideal light for harvest quality and lights nearby grow tents.",
-    "jei.highcraft.info.grow_tent": "Grows crops independent of weather: insert seeds, water buckets and optionally fertilizer. Light comes from FE power, a nearby grow lamp, or open sky during the day.",
+    "jei.highcraft.info.grow_tent": "Two blocks tall (needs a free block above). Grows crops independent of weather: insert seeds, water buckets and optionally fertilizer. Light comes from FE power, a nearby grow lamp, or open sky during the day. Hoppers and cables work on both halves.",
     "jei.highcraft.info.drying_rack": "Right-click with plant parts to hang them up (max. 4). Dries faster in warm biomes and sunshine, pauses in rain. Right-click with an empty hand to take finished goods. Works with hoppers.",
     "jei.highcraft.info.bong": "Fill with water, pack with cannabis, tobacco or opium and take a hit with an empty hand (lighter in inventory).",
     "jei.highcraft.info.precision_scale": "Job site of the Dealer. Right-click with goods to see weight and quality.",

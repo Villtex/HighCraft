@@ -1,6 +1,7 @@
 package de.highcraft.block.entity;
 
 import de.highcraft.block.CropQuality;
+import de.highcraft.block.GrowTentBlock;
 import de.highcraft.block.MachineType;
 import de.highcraft.drug.Quality;
 import de.highcraft.recipe.GrowingRecipe;
@@ -20,15 +21,17 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 /**
- * Grow tent: grows plants regardless of weather/season.
+ * Grow tent (2 blocks tall, the block entity sits in the lower half): grows plants regardless of weather/season.
  * <ul>
  *     <li>Slot 0: seeds · slot 1: fertilizer (optional, +50 % speed, +1 quality) · slot 2: water bucket</li>
  *     <li>Light: FE power (lamp in the tent), a grow lamp nearby or open sky during the day</li>
@@ -38,17 +41,31 @@ public class GrowTentBlockEntity extends AbstractMachineBlockEntity {
     public static final int SLOT_SEED = 0, SLOT_FERTILIZER = 1, SLOT_WATER = 2;
     public static final int LIGHT_NONE = 0, LIGHT_SUN = 1, LIGHT_LAMP = 2, LIGHT_POWER = 3;
     private static final int ENERGY_PER_TICK = 15;
+    /** How often (ticks) the surroundings (grow lamp, daylight through the roof) are re-checked. */
+    private static final int ENV_INTERVAL = 40;
 
     private int water;
     private int lightState;
     private boolean fertilizedCycle;
     @Nullable
     private RecipeHolder<GrowingRecipe> cachedRecipe;
+    @Nullable
+    private RecipeManager cachedRecipeManager;
     private boolean recipeDirty = true;
+    private boolean cachedLamp;
+    private boolean cachedSky;
+    private int envTimer;
+    /** Tents from before 1.2.1 were one block tall - their upper half is added on the first tick. */
+    private boolean upperHalfChecked;
 
     // Client rendering
     private Block displayBlock = Blocks.AIR;
     private float displayProgress;
+    @Nullable
+    private BlockState renderState;
+    @Nullable
+    private Block renderBlock;
+    private float renderProgress = -1f;
 
     public GrowTentBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.GROW_TENT.get(), pos, state, MachineType.GROW_TENT);
@@ -58,8 +75,13 @@ public class GrowTentBlockEntity extends AbstractMachineBlockEntity {
     @Override
     protected boolean isValidForSlot(int slot, ItemStack stack) {
         return switch (slot) {
-            case SLOT_SEED -> level == null || level.getRecipeManager().getAllRecipesFor(ModRecipes.GROWING.get())
-                    .stream().anyMatch(r -> r.value().seed().test(stack));
+            case SLOT_SEED -> {
+                if (level == null) yield true;
+                for (RecipeHolder<GrowingRecipe> r : level.getRecipeManager().getAllRecipesFor(ModRecipes.GROWING.get())) {
+                    if (r.value().seed().test(stack)) yield true;
+                }
+                yield false;
+            }
             case SLOT_FERTILIZER -> stack.is(ModItems.FERTILIZER.get()) || stack.is(Items.BONE_MEAL);
             case SLOT_WATER -> stack.is(Items.WATER_BUCKET);
             default -> false;
@@ -89,31 +111,41 @@ public class GrowTentBlockEntity extends AbstractMachineBlockEntity {
 
     @Nullable
     private RecipeHolder<GrowingRecipe> findRecipe() {
-        if (level == null) return null;
+        RecipeManager recipes = level.getRecipeManager();
+        if (recipes != cachedRecipeManager) {
+            // /reload creates a new RecipeManager - the cached holder may be outdated
+            cachedRecipeManager = recipes;
+            cachedRecipe = null;
+            recipeDirty = true;
+        }
         if (recipeDirty) {
             MachineRecipeInput input = new MachineRecipeInput(List.of(inventory.getStackInSlot(SLOT_SEED)));
-            cachedRecipe = level.getRecipeManager().getRecipeFor(ModRecipes.GROWING.get(), input, level, cachedRecipe).orElse(null);
+            cachedRecipe = recipes.getRecipeFor(ModRecipes.GROWING.get(), input, level, cachedRecipe).orElse(null);
             recipeDirty = false;
         }
         return cachedRecipe;
     }
 
     private int computeLight() {
-        if (level == null) return LIGHT_NONE;
         if (energy.getEnergyStored() >= ENERGY_PER_TICK) return LIGHT_POWER;
-        if (level instanceof ServerLevel sl && level.getGameTime() % 40 == 0) {
+        if (--envTimer <= 0 && level instanceof ServerLevel sl) {
+            envTimer = ENV_INTERVAL;
             cachedLamp = CropQuality.hasGrowLampNearby(sl, worldPosition.below(2));
+            // Daylight has to reach the roof: above the upper half (or above a legacy one-block tent)
+            cachedSky = level.canSeeSky(worldPosition.above(GrowTentBlock.hasUpperHalf(level, worldPosition) ? 2 : 1));
         }
         if (cachedLamp) return LIGHT_LAMP;
-        if (level.isDay() && level.canSeeSky(worldPosition.above())) return LIGHT_SUN;
+        if (cachedSky && level.isDay()) return LIGHT_SUN;
         return LIGHT_NONE;
     }
-
-    private boolean cachedLamp;
 
     @Override
     public void serverTick() {
         if (level == null) return;
+        if (!upperHalfChecked) {
+            upperHalfChecked = true;
+            GrowTentBlock.restoreUpperHalf(level, worldPosition, getBlockState());
+        }
         // Water bucket -> tank
         ItemStack bucket = inventory.getStackInSlot(SLOT_WATER);
         if (bucket.is(Items.WATER_BUCKET) && water + 1000 <= MachineType.WATER_CAPACITY) {
@@ -125,7 +157,7 @@ public class GrowTentBlockEntity extends AbstractMachineBlockEntity {
         int newLight = computeLight();
         if (newLight != lightState) {
             lightState = newLight;
-            setChanged();
+            markUnsaved();
         }
         Block newDisplay = holder == null ? Blocks.AIR : holder.value().displayBlock();
 
@@ -152,7 +184,7 @@ public class GrowTentBlockEntity extends AbstractMachineBlockEntity {
                 progress = 0;
                 fertilizedCycle = false;
             }
-            setChanged();
+            markUnsaved();
         }
         float shown = holder == null ? 0f : Math.min(1f, progress / (float) (maxProgress * 2));
         // Only send to clients on a visible change (8 stages)
@@ -164,17 +196,15 @@ public class GrowTentBlockEntity extends AbstractMachineBlockEntity {
         setLit(canRun && lightState == LIGHT_POWER);
     }
 
+    /** Whether every output has a free or stackable slot. Allocation-free (called every tick). */
     private boolean hasOutputSpace(GrowingRecipe recipe) {
         for (GrowingRecipe.Output o : recipe.outputs()) {
-            ItemStack test = o.stack().copy();
-            Quality.set(test, 5);
+            ItemStack out = o.stack();
             boolean fits = false;
-            for (int s = machine.firstOutputSlot(); s < machine.slotCount(); s++) {
+            for (int s = machine.firstOutputSlot(); s < machine.slotCount() && !fits; s++) {
                 ItemStack existing = inventory.getStackInSlot(s);
-                if (existing.isEmpty() || (existing.is(test.getItem()) && existing.getCount() + test.getCount() <= existing.getMaxStackSize())) {
-                    fits = true;
-                    break;
-                }
+                fits = existing.isEmpty()
+                        || (existing.is(out.getItem()) && existing.getCount() + out.getCount() <= existing.getMaxStackSize());
             }
             if (!fits) return false;
         }
@@ -186,7 +216,6 @@ public class GrowTentBlockEntity extends AbstractMachineBlockEntity {
         ItemStack seed = inventory.getStackInSlot(SLOT_SEED).copy();
         seed.shrink(1);
         inventory.setStackInSlot(SLOT_SEED, seed);
-        recipeDirty = true;
 
         int quality = 1;
         if (fertilizedCycle) quality++;
@@ -198,7 +227,8 @@ public class GrowTentBlockEntity extends AbstractMachineBlockEntity {
             if (level.random.nextFloat() <= o.chance()) {
                 ItemStack out = o.stack().copy();
                 if (!out.is(net.minecraft.tags.ItemTags.VILLAGER_PLANTABLE_SEEDS) && !isSeed(out)) Quality.set(out, quality);
-                insertOutput(out, false);
+                // hasOutputSpace can't know the rolled quality (different qualities don't stack) - never delete the rest
+                dropOverflow(insertOutput(out));
             }
         }
     }
@@ -212,6 +242,27 @@ public class GrowTentBlockEntity extends AbstractMachineBlockEntity {
     public int water() { return water; }
     public Block displayBlock() { return displayBlock; }
     public float displayProgress() { return displayProgress; }
+
+    /**
+     * Block state of the plant shown in the tent, or {@code null} if empty. Cached for the renderer -
+     * it only changes with the synced display values (8 growth stages).
+     */
+    @Nullable
+    public BlockState renderState() {
+        if (displayBlock == Blocks.AIR) return null;
+        if (renderBlock != displayBlock || renderProgress != displayProgress) {
+            renderBlock = displayBlock;
+            renderProgress = displayProgress;
+            BlockState state = displayBlock.defaultBlockState();
+            if (displayBlock.getStateDefinition().getProperty("age") instanceof IntegerProperty age) {
+                int max = 0;
+                for (int v : age.getPossibleValues()) max = Math.max(max, v);
+                state = state.setValue(age, Math.min(max, (int) Math.floor(displayProgress * (max + 1))));
+            }
+            renderState = state;
+        }
+        return renderState;
+    }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
