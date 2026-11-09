@@ -554,6 +554,9 @@ def gen_misc():
     wtex('entity/villager/profession/grower', grower, {'villager': {'hat': 'full'}})
     wtex('entity/zombie_villager/profession/dealer', dealer, {'villager': {'hat': 'partial'}})
     wtex('entity/zombie_villager/profession/grower', grower, {'villager': {'hat': 'full'}})
+    chemist = B.chemist_villager()
+    wtex('entity/villager/profession/chemist', chemist, {'villager': {'hat': 'partial'}})
+    wtex('entity/zombie_villager/profession/chemist', chemist, {'villager': {'hat': 'partial'}})
 
 def gen_shaders():
     wjson('shaders/post/drugs.json', {

@@ -645,6 +645,19 @@ public class DevTest {
         step(5, mc -> look(mc, -26, Y + 26, -14, 6, Y, z0 + gap * 2 + 6));
         step(80, mc -> {});
         step(10, mc -> shot(mc, "s_overview"));
+        // close-up of the chemist in the plains lab (the villager walks around, so look it up right before the shot)
+        step(5, mc -> {
+            var box = new net.minecraft.world.phys.AABB(x0, Y, z0, x0 + 11, Y + 8, z0 + 11);
+            mc.level.getEntitiesOfClass(net.minecraft.world.entity.npc.Villager.class, box).stream()
+                    .filter(v -> v.getVillagerData().getProfession() == de.highcraft.registry.ModVillagers.CHEMIST.get())
+                    .findFirst().ifPresentOrElse(v -> {
+                        Vec3 p = v.position();
+                        double sx = p.x < x0 + 5 ? 1.8 : -1.8;
+                        look(mc, p.x + sx, p.y + 2.2, p.z - 1.0, p.x, p.y + 1.3, p.z);
+                    }, () -> HighCraft.LOGGER.warn("[DevTest] no chemist found in the plains lab"));
+        });
+        step(30, mc -> {});
+        step(10, mc -> shot(mc, "s_chemist"));
     }
 
     private void villageShots(String[] types) {
@@ -700,6 +713,21 @@ public class DevTest {
                 look(mc, c.x + front.getStepX() * 15 - side.getStepX() * 11, c.y + 7, c.z + front.getStepZ() * 15 - side.getStepZ() * 11, c.x, c.y, c.z);
             });
             step(300, mc -> {});
+            // which villagers live in the lab, and did the chemist claim the reactor as job site?
+            step(5, mc -> {
+                BlockPos r = found[k];
+                if (r == null) return;
+                MinecraftServer server = mc.getSingleplayerServer();
+                server.execute(() -> {
+                    for (var v : server.overworld().getEntitiesOfClass(net.minecraft.world.entity.npc.Villager.class,
+                            new net.minecraft.world.phys.AABB(r).inflate(7))) {
+                        HighCraft.LOGGER.info("[DevTest] lab {} villager {} job site {}", types[k],
+                                net.minecraft.core.registries.BuiltInRegistries.VILLAGER_PROFESSION.getKey(v.getVillagerData().getProfession()),
+                                v.getBrain().getMemory(net.minecraft.world.entity.ai.memory.MemoryModuleType.JOB_SITE)
+                                        .map(g -> g.pos().toShortString()).orElse("-"));
+                    }
+                });
+            });
             step(10, mc -> { if (found[k] != null) shot(mc, "s_village_" + types[k]); });
         }
     }

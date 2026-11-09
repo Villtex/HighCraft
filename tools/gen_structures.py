@@ -127,6 +127,11 @@ def parse(state):
 class Template:
     def __init__(self):
         self.blocks = {}
+        self.entities = []
+
+    def entity(self, x, y, z, data):
+        """Entity placed with the structure (x/z = block centre). UUIDs are dropped by the game when placing."""
+        self.entities.append({'pos': [x + 0.5, float(y), z + 0.5], 'blockPos': [x, y, z], 'nbt': data})
 
     def set(self, x, y, z, state, nbt_=None):
         if ':' not in state:
@@ -160,7 +165,7 @@ class Template:
             if data:
                 b['nbt'] = data
             blocks.append(b)
-        nbt.write(path, {'size': self.size(), 'entities': Tag(LIST, [], elem=COMPOUND), 'blocks': blocks,
+        nbt.write(path, {'size': self.size(), 'entities': Tag(LIST, self.entities, elem=COMPOUND), 'blocks': blocks,
                          'palette': palette, 'DataVersion': DATA_VERSION})
 
 # ---------------------------------------------------------------- roof profiles
@@ -295,7 +300,11 @@ def drug_lab(vtype, st):
     interior(t, st, prof)
     exterior(t, st, prof)
 
-    # jigsaws: entrance (connects to the street) and villager spawn
+    # the lab's chemist: profession preset (job site = chemical reactor); Xp 1 keeps the profession until the
+    # reactor is claimed (a level-1 villager without job site and without xp falls back to "unemployed")
+    t.entity(6, 2, 6, {'id': 'minecraft:villager', 'Xp': 1,
+                       'VillagerData': {'profession': 'highcraft:chemist', 'level': 1, 'type': f'minecraft:{vtype}'}})
+    # jigsaws: entrance (connects to the street) and a random village resident
     t.set(0, 0, ZM, 'minecraft:jigsaw[orientation=west_up]', {
         'id': 'minecraft:jigsaw', 'name': 'minecraft:building_entrance', 'target': 'minecraft:building_entrance',
         'pool': f'minecraft:village/{vtype}/streets', 'joint': 'aligned', 'final_state': 'minecraft:' + st['found'],
