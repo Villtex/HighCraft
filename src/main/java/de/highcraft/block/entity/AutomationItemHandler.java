@@ -23,7 +23,7 @@ public class AutomationItemHandler implements IItemHandler {
 
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        if (!inner.isItemValid(slot, stack)) return stack;
+        // ItemStackHandler#insertItem already checks isItemValid (= recipe scan) - don't run it twice per hopper insert
         return inner.insertItem(slot, stack, simulate);
     }
 

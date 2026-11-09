@@ -1,33 +1,63 @@
 {
   "variants": {
-    "facing=north,lit=false": {
-      "model": "highcraft:block/grow_tent"
+    "facing=north,half=lower,lit=false": {
+      "model": "highcraft:block/grow_tent_lower"
     },
-    "facing=north,lit=true": {
-      "model": "highcraft:block/grow_tent_on"
+    "facing=north,half=lower,lit=true": {
+      "model": "highcraft:block/grow_tent_lower"
     },
-    "facing=east,lit=false": {
-      "model": "highcraft:block/grow_tent",
+    "facing=north,half=upper,lit=false": {
+      "model": "highcraft:block/grow_tent_upper"
+    },
+    "facing=north,half=upper,lit=true": {
+      "model": "highcraft:block/grow_tent_upper_on"
+    },
+    "facing=east,half=lower,lit=false": {
+      "model": "highcraft:block/grow_tent_lower",
       "y": 90
     },
-    "facing=east,lit=true": {
-      "model": "highcraft:block/grow_tent_on",
+    "facing=east,half=lower,lit=true": {
+      "model": "highcraft:block/grow_tent_lower",
       "y": 90
     },
-    "facing=south,lit=false": {
-      "model": "highcraft:block/grow_tent",
+    "facing=east,half=upper,lit=false": {
+      "model": "highcraft:block/grow_tent_upper",
+      "y": 90
+    },
+    "facing=east,half=upper,lit=true": {
+      "model": "highcraft:block/grow_tent_upper_on",
+      "y": 90
+    },
+    "facing=south,half=lower,lit=false": {
+      "model": "highcraft:block/grow_tent_lower",
       "y": 180
     },
-    "facing=south,lit=true": {
-      "model": "highcraft:block/grow_tent_on",
+    "facing=south,half=lower,lit=true": {
+      "model": "highcraft:block/grow_tent_lower",
       "y": 180
     },
-    "facing=west,lit=false": {
-      "model": "highcraft:block/grow_tent",
+    "facing=south,half=upper,lit=false": {
+      "model": "highcraft:block/grow_tent_upper",
+      "y": 180
+    },
+    "facing=south,half=upper,lit=true": {
+      "model": "highcraft:block/grow_tent_upper_on",
+      "y": 180
+    },
+    "facing=west,half=lower,lit=false": {
+      "model": "highcraft:block/grow_tent_lower",
       "y": 270
     },
-    "facing=west,lit=true": {
-      "model": "highcraft:block/grow_tent_on",
+    "facing=west,half=lower,lit=true": {
+      "model": "highcraft:block/grow_tent_lower",
+      "y": 270
+    },
+    "facing=west,half=upper,lit=false": {
+      "model": "highcraft:block/grow_tent_upper",
+      "y": 270
+    },
+    "facing=west,half=upper,lit=true": {
+      "model": "highcraft:block/grow_tent_upper_on",
       "y": 270
     }
   }

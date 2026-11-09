@@ -67,14 +67,15 @@ public class CocaBushBlock extends HighCropBlock {
         return drops;
     }
 
+    private static final VoxelShape[] SHAPES = {
+            Block.box(5, 0, 5, 11, 6, 11),
+            Block.box(3, 0, 3, 13, 10, 13),
+            Block.box(2, 0, 2, 14, 13, 14),
+            Block.box(1, 0, 1, 15, 16, 15)
+    };
+
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        int age = state.getValue(AGE);
-        return switch (age) {
-            case 0 -> Block.box(5, 0, 5, 11, 6, 11);
-            case 1 -> Block.box(3, 0, 3, 13, 10, 13);
-            case 2 -> Block.box(2, 0, 2, 14, 13, 14);
-            default -> Block.box(1, 0, 1, 15, 16, 15);
-        };
+        return SHAPES[Math.min(SHAPES.length - 1, state.getValue(AGE))];
     }
 }

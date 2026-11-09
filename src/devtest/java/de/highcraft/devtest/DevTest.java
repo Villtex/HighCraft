@@ -68,8 +68,43 @@ public class DevTest {
         });
     }
 
+    private boolean worldRequested;
+
+    /**
+     * Fresh checkout: the quick-play world "hctest" doesn't exist yet (quick play then shows an error screen).
+     * Create it through the normal client world creation - a flat creative world with cheats.
+     */
+    private void createTestWorld(Minecraft mc) {
+        worldRequested = true;
+        HighCraft.LOGGER.info("[DevTest] world 'hctest' missing - creating a flat test world");
+        var rules = new net.minecraft.world.level.GameRules();
+        var settings = new net.minecraft.world.level.LevelSettings("hctest", net.minecraft.world.level.GameType.CREATIVE, false,
+                net.minecraft.world.Difficulty.PEACEFUL, true, rules, net.minecraft.world.level.WorldDataConfiguration.DEFAULT);
+        mc.createWorldOpenFlows().createFreshLevel("hctest", settings,
+                new net.minecraft.world.level.levelgen.WorldOptions(1L, false, false),
+                registries -> registries.registryOrThrow(net.minecraft.core.registries.Registries.WORLD_PRESET)
+                        .getHolderOrThrow(net.minecraft.world.level.levelgen.presets.WorldPresets.FLAT).value().createWorldDimensions(),
+                new net.minecraft.client.gui.screens.TitleScreen());
+    }
+
     private void onTick(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null && !worldRequested && mc.getOverlay() == null && mc.screen != null) {
+            if (mc.screen instanceof net.minecraft.client.gui.screens.AccessibilityOnboardingScreen) {
+                // First launch of a fresh run dir: the onboarding screen blocks quick play - skip it and open the world
+                mc.options.onboardAccessibility = false;
+                mc.options.save();
+                if (mc.getLevelSource().levelExists("hctest")) {
+                    worldRequested = true;
+                    mc.createWorldOpenFlows().openWorld("hctest", () -> mc.setScreen(new net.minecraft.client.gui.screens.TitleScreen()));
+                    return;
+                }
+            }
+            if (!mc.getLevelSource().levelExists("hctest")) {
+                createTestWorld(mc);
+                return;
+            }
+        }
         if (mc.level == null || mc.player == null || mc.getSingleplayerServer() == null) return;
         if (++ticks < 60) return;
         if (wait > 0) { wait--; return; }
@@ -143,14 +178,16 @@ public class DevTest {
             c.add(setb(4, Y + 1, z, "highcraft:extractor[facing=north,lit=true]"));
             c.add(setb(6, Y + 1, z, "highcraft:lab_station[facing=north,lit=true]"));
             c.add(setb(8, Y + 1, z, "highcraft:press[facing=north,lit=false]"));
-            c.add(setb(10, Y + 1, z, "highcraft:grow_tent[facing=north,lit=true]"));
+            c.add(setb(10, Y + 1, z, "highcraft:grow_tent[facing=north,half=lower,lit=true]"));
+            c.add(setb(10, Y + 2, z, "highcraft:grow_tent[facing=north,half=upper,lit=true]"));
             c.add(setb(12, Y + 1, z, "highcraft:bong[facing=north,water=true,load=cannabis]"));
             c.add(setb(14, Y + 1, z, "highcraft:precision_scale[facing=north]"));
             c.add(setb(2, Y + 1, z + 3, "highcraft:grinder[facing=north,lit=false]"));
             c.add(setb(4, Y + 1, z + 3, "highcraft:extractor[facing=north,lit=false]"));
             c.add(setb(6, Y + 1, z + 3, "highcraft:lab_station[facing=north,lit=false]"));
             c.add(setb(8, Y + 1, z + 3, "highcraft:press[facing=north,lit=true]"));
-            c.add(setb(10, Y + 1, z + 3, "highcraft:grow_tent[facing=north,lit=false]"));
+            c.add(setb(10, Y + 1, z + 3, "highcraft:grow_tent[facing=north,half=lower,lit=false]"));
+            c.add(setb(10, Y + 2, z + 3, "highcraft:grow_tent[facing=north,half=upper,lit=false]"));
             c.add(setb(12, Y + 1, z + 3, "highcraft:bong[facing=north,water=false,load=empty]"));
             // Grow lamp above the cannabis
             c.add(setb(14, Y + 4, 0, "highcraft:grow_lamp"));
@@ -190,6 +227,10 @@ public class DevTest {
         if ("iris".equals(System.getProperty("highcraft.devtest.only"))) { irisTest(); return; }
         if ("create".equals(System.getProperty("highcraft.devtest.only"))) { createTest(); return; }
         if ("lab".equals(System.getProperty("highcraft.devtest.only"))) { labTest(); return; }
+        if ("tent".equals(System.getProperty("highcraft.devtest.only"))) { tentTest(); return; }
+        if ("icons".equals(System.getProperty("highcraft.devtest.only"))) { iconTest(); return; }
+        if ("structures".equals(System.getProperty("highcraft.devtest.only"))) { structureTest(true); return; }
+        if ("villages".equals(System.getProperty("highcraft.devtest.only"))) { structureTest(false); return; }
         step(140, mc -> tp(mc, 7.5, Y + 6.5, -7.0, 0f, 32f));
         waitUntil(mc -> mc.player.getY() > Y + 2);
         step(60, mc -> {});
@@ -480,10 +521,10 @@ public class DevTest {
         step(5, mc -> cmd(mc, "effect clear Dev"));
         // village lab template
         step(10, mc -> { mc.options.hideGui = true; cmd(mc, "place template highcraft:village/plains/drug_lab 2 " + Y + " 28"); });
-        step(20, mc -> tp(mc, -3.0, Y + 1.0, 32.5, -90f, 5f));
-        waitUntil(mc -> mc.level.getBlockState(new BlockPos(10, Y + 1, 30)).is(ModBlocks.CHEMICAL_REACTOR.get()));
+        step(20, mc -> tp(mc, -6.0, Y + 2.0, 33.5, -90f, 8f));
+        waitUntil(mc -> mc.level.getBlockState(new BlockPos(10, Y + 2, 35)).is(ModBlocks.CHEMICAL_REACTOR.get()));
         step(60, mc -> shot(mc, "89_village_lab_outside"));
-        step(5, mc -> tp(mc, 3.6, Y + 1.0, 32.5, -90f, 12f));
+        step(5, mc -> tp(mc, 5.6, Y + 2.0, 33.5, -90f, 12f));
         step(60, mc -> shot(mc, "90_village_lab_inside"));
         // real villages: how often does a lab spawn?
         final int[] found = new int[2];
@@ -559,6 +600,365 @@ public class DevTest {
                 "INPUT".equals(role) ? mezz.jei.api.recipe.RecipeIngredientRole.INPUT : mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT,
                 mezz.jei.api.constants.VanillaTypes.ITEM_STACK, new ItemStack(item));
         rt.getRecipesGui().show(focus);
+    }
+
+    private static void check(String what, boolean ok, Object detail) {
+        HighCraft.LOGGER.info("[DevTest] {} {} ({})", ok ? "PASS" : "FAIL", what, detail);
+    }
+
+    private static int progressOf(Object be) {
+        try {
+            Field f = de.highcraft.block.entity.AbstractMachineBlockEntity.class.getDeclaredField("progress");
+            f.setAccessible(true);
+            return f.getInt(be);
+        } catch (Exception e) { return -1; }
+    }
+
+    private static int countItems(ServerLevel level, BlockPos around, net.minecraft.world.item.Item item) {
+        int n = 0;
+        for (var e : level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(around).inflate(3))) {
+            if (e.getItem().is(item)) n += e.getItem().getCount();
+        }
+        return n;
+    }
+
+    /** Effect icons of the 1.2.0 effects (mode "icons") - inventory side panel and HUD, tutorial toast off. */
+    private void iconTest() {
+        String[] effects = {"meth_high", "euphoria", "comedown", "toxic_fumes"};
+        step(10, mc -> {
+            mc.options.hideGui = false;
+            mc.getTutorial().setStep(net.minecraft.client.tutorial.TutorialSteps.NONE);
+            mc.getToasts().clear();
+            cmd(mc, "gamemode creative Dev"); // no fume damage
+            tp(mc, 7.5, Y + 1.0, 14.0, 0f, 10f);
+            for (String e : effects) cmd(mc, "effect give Dev highcraft:" + e + " 600 0 false");
+        });
+        step(40, mc -> {
+            for (String e : effects) {
+                var holder = net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.getHolder(HighCraft.id(e)).orElseThrow();
+                var sprite = mc.getMobEffectTextures().get(holder);
+                check("effect icon " + e, !sprite.contents().name().equals(
+                        net.minecraft.client.renderer.texture.MissingTextureAtlasSprite.getLocation()), sprite.contents().name());
+            }
+            mc.setScreen(new net.minecraft.client.gui.screens.inventory.InventoryScreen(mc.player));
+        });
+        step(30, mc -> shot(mc, "95_effect_icons_inventory"));
+        step(5, mc -> mc.setScreen(null));
+        step(30, mc -> shot(mc, "96_effect_icons_hud"));
+        step(10, mc -> { HighCraft.LOGGER.info("[DevTest] icon test done - quitting"); mc.stop(); });
+    }
+
+    /** Two-block grow tent + machine notification fixes (mode "tent"). */
+    private void tentTest() {
+        final int z = 32;
+        final BlockPos lit = new BlockPos(30, Y + 1, z), dark = new BlockPos(32, Y + 1, z), legacy = new BlockPos(34, Y + 1, z),
+                blocked = new BlockPos(36, Y + 1, z), work = new BlockPos(38, Y + 1, z), press = new BlockPos(30, Y + 1, z + 5),
+                control = new BlockPos(32, Y + 1, z + 5);
+        step(10, mc -> {
+            for (String c : new String[]{
+                    setb(30, Y + 1, z, "highcraft:grow_tent[facing=north,half=lower,lit=true]"),
+                    setb(30, Y + 2, z, "highcraft:grow_tent[facing=north,half=upper,lit=true]"),
+                    setb(32, Y + 1, z, "highcraft:grow_tent[facing=north,half=lower,lit=false]"),
+                    setb(32, Y + 2, z, "highcraft:grow_tent[facing=north,half=upper,lit=false]"),
+                    setb(34, Y + 1, z, "highcraft:grow_tent[facing=north,half=lower,lit=false]"),   // pre-1.2.1 tent: gets its roof
+                    setb(36, Y + 2, z, "minecraft:stone"),
+                    setb(36, Y + 1, z, "highcraft:grow_tent[facing=north,half=lower,lit=false]"),   // pre-1.2.1 tent without room
+                    setb(38, Y + 1, z, "highcraft:grow_tent[facing=north,half=lower,lit=false]"),
+                    setb(38, Y + 2, z, "highcraft:grow_tent[facing=north,half=upper,lit=false]"),
+                    setb(30, Y + 1, z + 5, "highcraft:press[facing=north,lit=false]"),
+                    setb(32, Y + 1, z + 5, "highcraft:press[facing=north,lit=false]")}) cmd(mc, c);
+            tp(mc, 31.5, Y + 1, z + 3.0, 0f, 20f); // within reach of the presses, else stillValid closes the menu
+        });
+        step(40, mc -> mc.getSingleplayerServer().execute(() -> {
+            ServerLevel level = mc.getSingleplayerServer().overworld();
+            check("legacy tent got its roof", de.highcraft.block.GrowTentBlock.hasUpperHalf(level, legacy), level.getBlockState(legacy.above()));
+            check("legacy tent without room survives", level.getBlockState(blocked).is(ModBlocks.GROW_TENT.get())
+                    && level.getBlockState(blocked.above()).is(net.minecraft.world.level.block.Blocks.STONE), level.getBlockState(blocked));
+            check("upper half has no block entity", level.getBlockEntity(work.above()) == null, level.getBlockEntity(work.above()));
+            var items = level.getCapability(net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK, work.above(), Direction.UP);
+            var energy = level.getCapability(net.neoforged.neoforge.capabilities.Capabilities.EnergyStorage.BLOCK, work.above(), Direction.UP);
+            check("item capability on the roof", items != null, items);
+            check("energy capability on the roof", energy != null, energy);
+            if (items != null && energy != null) {
+                ItemStack rest = items.insertItem(GrowTentBlockEntity.SLOT_SEED, new ItemStack(ModItems.CANNABIS_SEEDS.get(), 4), false);
+                items.insertItem(GrowTentBlockEntity.SLOT_WATER, new ItemStack(net.minecraft.world.item.Items.WATER_BUCKET), false);
+                for (int i = 0; i < 50; i++) energy.receiveEnergy(400, false);
+                check("seeds inserted through the roof", rest.isEmpty(), rest);
+            }
+            // Press: 1 resin (recipe needs 2), then shift-click more in -> must start (in-place merge notification)
+            if (level.getBlockEntity(control) instanceof de.highcraft.block.entity.AbstractMachineBlockEntity c) {
+                c.inventory().setStackInSlot(0, new ItemStack(ModItems.CANNABIS_RESIN.get(), 1));
+                for (int i = 0; i < 10; i++) c.energyStorage().receiveEnergy(400, false);
+            }
+            if (level.getBlockEntity(press) instanceof de.highcraft.block.entity.AbstractMachineBlockEntity be) {
+                be.inventory().setStackInSlot(0, new ItemStack(ModItems.CANNABIS_RESIN.get(), 1));
+                for (int i = 0; i < 10; i++) be.energyStorage().receiveEnergy(400, false);
+                var sp = mc.getSingleplayerServer().getPlayerList().getPlayers().get(0);
+                sp.getInventory().setItem(0, new ItemStack(ModItems.CANNABIS_RESIN.get(), 5));
+                sp.openMenu(be, buf -> buf.writeBlockPos(press));
+            }
+        }));
+        step(40, mc -> mc.getSingleplayerServer().execute(() -> {
+            ServerLevel level = mc.getSingleplayerServer().overworld();
+            var tent = level.getBlockEntity(work);
+            check("tent grows (powered)", progressOf(tent) > 0, progressOf(tent));
+            check("lamp on in the lower half", level.getBlockState(work).getValue(de.highcraft.block.MachineBlock.LIT), level.getBlockState(work));
+            check("roof mirrors the lamp", level.getBlockState(work.above()).getValue(de.highcraft.block.MachineBlock.LIT), level.getBlockState(work.above()));
+            var pressBe = level.getBlockEntity(press);
+            check("press idle with 1 resin", progressOf(pressBe) == 0, progressOf(pressBe));
+            var sp = mc.getSingleplayerServer().getPlayerList().getPlayers().get(0);
+            check("press menu open", sp.containerMenu instanceof de.highcraft.menu.MachineMenu, sp.containerMenu);
+            if (sp.containerMenu instanceof de.highcraft.menu.MachineMenu menu) {
+                menu.quickMoveStack(sp, menu.machineSlotCount() + 27); // hotbar slot 0 -> merges into the input stack
+            }
+            // Control: the same in-place merge through a plain NeoForge SlotItemHandler (= behaviour before the fix)
+            var c = (de.highcraft.block.entity.AbstractMachineBlockEntity) level.getBlockEntity(control);
+            var plain = new net.neoforged.neoforge.items.SlotItemHandler(c.inventory(), 0, 0, 0);
+            plain.getItem().grow(4);
+            plain.setChanged();
+        }));
+        step(40, mc -> mc.getSingleplayerServer().execute(() -> {
+            ServerLevel level = mc.getSingleplayerServer().overworld();
+            var pressBe = (de.highcraft.block.entity.AbstractMachineBlockEntity) level.getBlockEntity(press);
+            check("press runs after shift-click merge", progressOf(pressBe) > 0,
+                    "progress=" + progressOf(pressBe) + " input=" + pressBe.inventory().getStackInSlot(0));
+            var c = (de.highcraft.block.entity.AbstractMachineBlockEntity) level.getBlockEntity(control);
+            check("control: plain SlotItemHandler merge is not seen (the old bug)", progressOf(c) == 0,
+                    "progress=" + progressOf(c) + " input=" + c.inventory().getStackInSlot(0));
+            mc.getSingleplayerServer().getPlayerList().getPlayers().get(0).closeContainer();
+        }));
+        // Screenshots: client side plant display, then front view and close-up
+        step(10, mc -> {
+            setTent(mc, lit, ModBlocks.CANNABIS_CROP.get(), 0.95f);
+            setTent(mc, dark, ModBlocks.TOBACCO_CROP.get(), 0.9f);
+            setTent(mc, legacy, ModBlocks.POPPY_CROP.get(), 0.6f);
+            mc.options.hideGui = true;
+            tp(mc, 34.5, Y + 2.2, z - 6.5, 0f, 6f);
+        });
+        waitUntil(mc -> mc.player.getZ() > z - 8 && mc.player.getZ() < z - 5);
+        step(60, mc -> {});
+        step(20, mc -> shot(mc, "70_tents_front"));
+        step(30, mc -> tp(mc, 30.5, Y + 1.5, z - 2.4, 0f, 12f));
+        step(30, mc -> shot(mc, "71_tent_cannabis_close"));
+        step(30, mc -> tp(mc, 27.5, Y + 3.6, z - 3.5, -35f, 30f));
+        step(30, mc -> shot(mc, "72_tents_above"));
+        // Item: hotbar icon + first person, third person
+        step(10, mc -> { mc.options.hideGui = false; tp(mc, 33.5, Y + 1.0, z - 9.0, 0f, 10f);
+            cmd(mc, "item replace entity Dev weapon.mainhand with highcraft:grow_tent"); });
+        step(40, mc -> shot(mc, "73_tent_item_hand"));
+        step(5, mc -> mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_FRONT));
+        step(40, mc -> shot(mc, "74_tent_item_thirdperson"));
+        step(5, mc -> mc.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON));
+        // Breaking: survival on the roof drops exactly one tent + the contents; creative drops nothing
+        step(10, mc -> { cmd(mc, "gamemode survival Dev"); cmd(mc, "kill @e[type=item]"); });
+        step(10, mc -> mc.getSingleplayerServer().execute(() -> {
+            var sp = mc.getSingleplayerServer().getPlayerList().getPlayers().get(0);
+            sp.gameMode.destroyBlock(work.above());
+        }));
+        step(10, mc -> mc.getSingleplayerServer().execute(() -> {
+            ServerLevel level = mc.getSingleplayerServer().overworld();
+            check("survival: both halves gone", level.getBlockState(work).isAir() && level.getBlockState(work.above()).isAir(),
+                    level.getBlockState(work) + " / " + level.getBlockState(work.above()));
+            int tents = countItems(level, work, ModItems.GROW_TENT.get());
+            check("survival: exactly one tent dropped", tents == 1, tents);
+            check("survival: contents dropped", countItems(level, work, ModItems.CANNABIS_SEEDS.get()) >= 3,
+                    countItems(level, work, ModItems.CANNABIS_SEEDS.get()));
+        }));
+        step(10, mc -> { cmd(mc, "gamemode creative Dev"); cmd(mc, "kill @e[type=item]"); });
+        step(10, mc -> mc.getSingleplayerServer().execute(() -> {
+            var sp = mc.getSingleplayerServer().getPlayerList().getPlayers().get(0);
+            sp.gameMode.destroyBlock(dark.above());
+        }));
+        step(10, mc -> mc.getSingleplayerServer().execute(() -> {
+            ServerLevel level = mc.getSingleplayerServer().overworld();
+            check("creative: both halves gone", level.getBlockState(dark).isAir() && level.getBlockState(dark.above()).isAir(),
+                    level.getBlockState(dark) + " / " + level.getBlockState(dark.above()));
+            int tents = countItems(level, dark, ModItems.GROW_TENT.get());
+            check("creative: no tent dropped", tents == 0, tents);
+        }));
+        step(20, mc -> { HighCraft.LOGGER.info("[DevTest] tent test done - quitting"); mc.stop(); });
+    }
+
+    // ------------------------------------------------------------------ village lab templates
+    /**
+     * Places the five village lab templates side by side and screenshots each from outside (front + back) and inside
+     * (skipped with {@code templates = false}), then generates real villages and photographs the labs found there.
+     */
+    private void structureTest(boolean templates) {
+        final String[] types = de.highcraft.world.VillageLabs.VILLAGE_TYPES;
+        final int gap = 22, x0 = 0, z0 = 0;
+        step(5, mc -> { mc.options.hideGui = true; mc.options.fov().set(80); cmd(mc, "gamemode spectator Dev"); });
+        if (templates) templateShots(types, gap, x0, z0);
+        villageShots(types);
+        step(20, mc -> mc.stop());
+    }
+
+    private void templateShots(String[] types, int gap, int x0, int z0) {
+        step(10, mc -> {
+            cmd(mc, "effect clear Dev");
+            cmd(mc, "gamemode spectator Dev");
+            for (int zs = -12; zs < z0 + gap * types.length + 12; zs += 16) {
+                int ze = zs + 15;
+                cmd(mc, "fill -24 " + (Y - 3) + " " + zs + " 40 " + (Y - 1) + " " + ze + " minecraft:dirt");
+                cmd(mc, "fill -24 " + Y + " " + zs + " 40 " + Y + " " + ze + " minecraft:grass_block");
+                cmd(mc, "fill -24 " + (Y + 1) + " " + zs + " 40 " + (Y + 18) + " " + ze + " minecraft:air");
+            }
+        });
+        for (int i = 0; i < types.length; i++) {
+            final int zi = z0 + i * gap;
+            final String t = types[i];
+            // placed like a village piece: known shape (no neighbour updates), jigsaws replaced by their final state
+            step(10, mc -> {
+                MinecraftServer server = mc.getSingleplayerServer();
+                server.execute(() -> server.getStructureManager().get(HighCraft.id("village/" + t + "/drug_lab")).ifPresent(tpl -> {
+                    var settings = new net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings().setKnownShape(true)
+                            .addProcessor(net.minecraft.world.level.levelgen.structure.templatesystem.JigsawReplacementProcessor.INSTANCE);
+                    BlockPos pos = new BlockPos(x0, Y, zi);
+                    tpl.placeInWorld(server.overworld(), pos, pos, settings, server.overworld().getRandom(), 2);
+                }));
+            });
+            // a short dirt path in front of the entrance, like a village street
+            step(5, mc -> {
+                var size = templateSize(mc, t);
+                int door = zi + size.getZ() / 2;
+                cmd(mc, "fill " + (x0 - 6) + " " + Y + " " + (door - 1) + " " + (x0 - 1) + " " + Y + " " + (door + 1) + " minecraft:dirt_path");
+            });
+        }
+        step(40, mc -> {
+            mc.options.hideGui = true;
+            mc.options.fov().set(80);
+        });
+        for (int i = 0; i < types.length; i++) {
+            final int zi = z0 + i * gap;
+            final String t = types[i];
+            step(5, mc -> {
+                var s = templateSize(mc, t);
+                HighCraft.LOGGER.info("[DevTest] template {} size {}x{}x{}", t, s.getX(), s.getY(), s.getZ());
+                look(mc, x0 - 9.5, Y + 5.5, zi - 7.5, x0 + s.getX() * 0.5, Y + s.getY() * 0.35, zi + s.getZ() * 0.5);
+            });
+            step(70, mc -> {});
+            step(10, mc -> shot(mc, "s_" + t + "_front"));
+            step(5, mc -> {
+                var s = templateSize(mc, t);
+                look(mc, x0 + s.getX() + 7.5, Y + 7.5, zi + s.getZ() + 6.5, x0 + s.getX() * 0.5, Y + s.getY() * 0.35, zi + s.getZ() * 0.5);
+            });
+            step(50, mc -> {});
+            step(10, mc -> shot(mc, "s_" + t + "_back"));
+            step(5, mc -> {
+                var s = templateSize(mc, t);
+                mc.options.fov().set(100);
+                look(mc, x0 + 3.3, Y + 3.5, zi + 2.3, x0 + s.getX() - 2.0, Y + 2.6, zi + s.getZ() - 2.5);
+            });
+            step(50, mc -> {});
+            step(10, mc -> shot(mc, "s_" + t + "_inside"));
+            step(5, mc -> {
+                var s = templateSize(mc, t);
+                look(mc, x0 + s.getX() - 3.3, Y + 3.5, zi + s.getZ() - 3.3, x0 + 2.0, Y + 2.4, zi + 2.5);
+            });
+            step(40, mc -> {});
+            step(10, mc -> { shot(mc, "s_" + t + "_inside2"); mc.options.fov().set(80); });
+        }
+        step(5, mc -> look(mc, -26, Y + 26, -14, 6, Y, z0 + gap * 2 + 6));
+        step(80, mc -> {});
+        step(10, mc -> shot(mc, "s_overview"));
+        // close-up of the chemist in the plains lab (the villager walks around, so look it up right before the shot)
+        step(5, mc -> {
+            var box = new net.minecraft.world.phys.AABB(x0, Y, z0, x0 + 11, Y + 8, z0 + 11);
+            mc.level.getEntitiesOfClass(net.minecraft.world.entity.npc.Villager.class, box).stream()
+                    .filter(v -> v.getVillagerData().getProfession() == de.highcraft.registry.ModVillagers.CHEMIST.get())
+                    .findFirst().ifPresentOrElse(v -> {
+                        Vec3 p = v.position();
+                        double sx = p.x < x0 + 5 ? 1.8 : -1.8;
+                        look(mc, p.x + sx, p.y + 2.2, p.z - 1.0, p.x, p.y + 1.3, p.z);
+                    }, () -> HighCraft.LOGGER.warn("[DevTest] no chemist found in the plains lab"));
+        });
+        step(30, mc -> {});
+        step(10, mc -> shot(mc, "s_chemist"));
+    }
+
+    private void villageShots(String[] types) {
+        // real villages (jigsaw placement): up to 4 villages per type until one contains a lab, photographed from its street side
+        final BlockPos[] found = new BlockPos[types.length];
+        final Direction[] facing = new Direction[types.length];
+        for (int a = 0; a < 4; a++) {
+            for (int i = 0; i < types.length; i++) {
+                final int k = i;
+                final int vx = 4000 + i * 480, vz = 4000 + a * 480;
+                step(5, mc -> { if (found[k] == null) cmd(mc, "forceload add " + (vx - 80) + " " + (vz - 80) + " " + (vx + 80) + " " + (vz + 80)); });
+                step(200, mc -> { if (found[k] == null) cmd(mc, "place structure minecraft:village_" + types[k] + " " + vx + " 64 " + vz); });
+                step(60, mc -> {
+                    if (found[k] != null) return;
+                    MinecraftServer server = mc.getSingleplayerServer();
+                    server.execute(() -> {
+                        ServerLevel lvl = server.overworld();
+                        BlockPos hit = null;
+                        Direction dir = null;
+                        for (int cx = (vx - 96) >> 4; cx <= (vx + 96) >> 4 && hit == null; cx++)
+                            for (int cz = (vz - 96) >> 4; cz <= (vz + 96) >> 4 && hit == null; cz++) {
+                                var chunk = lvl.getChunk(cx, cz);
+                                for (int x = 0; x < 16 && hit == null; x++)
+                                    for (int z = 0; z < 16 && hit == null; z++) {
+                                        int top = chunk.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, x, z);
+                                        for (int y = top - 12; y <= top; y++) {
+                                            BlockPos bp = new BlockPos(cx * 16 + x, y, cz * 16 + z);
+                                            var bs = chunk.getBlockState(bp);
+                                            if (bs.is(ModBlocks.CHEMICAL_REACTOR.get())) {
+                                                hit = bp;
+                                                dir = bs.getValue(de.highcraft.block.MachineBlock.FACING);
+                                                break;
+                                            }
+                                        }
+                                    }
+                            }
+                        HighCraft.LOGGER.info("[DevTest] village {} #{} at {} {}: lab {}", types[k], k, vx, vz, hit == null ? "-" : hit.toShortString());
+                        if (hit != null) { facing[k] = dir; found[k] = hit; }
+                    });
+                });
+            }
+        }
+        for (int i = 0; i < types.length; i++) {
+            final int k = i;
+            step(10, mc -> {
+                BlockPos r = found[k];
+                if (r == null) return;
+                cmd(mc, "forceload add " + (r.getX() - 32) + " " + (r.getZ() - 32) + " " + (r.getX() + 32) + " " + (r.getZ() + 32));
+                // the reactor (template 8,2,7) faces the entrance; template z+ is the counter-clockwise side of that direction
+                Direction front = facing[k];
+                Direction side = front.getCounterClockWise();
+                Vec3 c = Vec3.atCenterOf(r).add(front.getStepX() * 3.0 - side.getStepX() * 2.0, 2.0, front.getStepZ() * 3.0 - side.getStepZ() * 2.0);
+                look(mc, c.x + front.getStepX() * 15 - side.getStepX() * 11, c.y + 7, c.z + front.getStepZ() * 15 - side.getStepZ() * 11, c.x, c.y, c.z);
+            });
+            step(300, mc -> {});
+            // which villagers live in the lab, and did the chemist claim the reactor as job site?
+            step(5, mc -> {
+                BlockPos r = found[k];
+                if (r == null) return;
+                MinecraftServer server = mc.getSingleplayerServer();
+                server.execute(() -> {
+                    for (var v : server.overworld().getEntitiesOfClass(net.minecraft.world.entity.npc.Villager.class,
+                            new net.minecraft.world.phys.AABB(r).inflate(7))) {
+                        HighCraft.LOGGER.info("[DevTest] lab {} villager {} job site {}", types[k],
+                                net.minecraft.core.registries.BuiltInRegistries.VILLAGER_PROFESSION.getKey(v.getVillagerData().getProfession()),
+                                v.getBrain().getMemory(net.minecraft.world.entity.ai.memory.MemoryModuleType.JOB_SITE)
+                                        .map(g -> g.pos().toShortString()).orElse("-"));
+                    }
+                });
+            });
+            step(10, mc -> { if (found[k] != null) shot(mc, "s_village_" + types[k]); });
+        }
+    }
+
+    private static net.minecraft.core.Vec3i templateSize(Minecraft mc, String type) {
+        return mc.getSingleplayerServer().getStructureManager()
+                .get(HighCraft.id("village/" + type + "/drug_lab")).map(t -> t.getSize()).orElse(new net.minecraft.core.Vec3i(10, 6, 9));
+    }
+
+    /** Teleports the camera to (x,y,z) (eye position) looking at (tx,ty,tz). */
+    private static void look(Minecraft mc, double x, double y, double z, double tx, double ty, double tz) {
+        double dx = tx - x, dy = ty - y, dz = tz - z;
+        float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
+        float pitch = (float) -Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)));
+        tp(mc, x, y - 1.62, z, yaw, pitch);
     }
 
     private void handTest() {

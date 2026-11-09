@@ -61,9 +61,10 @@ public final class ModBlocks {
             () -> new MachineBlock(machine(MapColor.COLOR_LIGHT_GRAY).noOcclusion(), MachineType.LAB));
     public static final DeferredBlock<MachineBlock> PRESS = BLOCKS.register("press",
             () -> new MachineBlock(machine(MapColor.METAL).noOcclusion(), MachineType.PRESS));
-    public static final DeferredBlock<MachineBlock> GROW_TENT = BLOCKS.register("grow_tent",
-            () -> new MachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(1.0f)
-                    .sound(SoundType.WOOL).noOcclusion().lightLevel(s -> s.getValue(MachineBlock.LIT) ? 10 : 0), MachineType.GROW_TENT));
+    /** Two blocks tall (lower half: block entity, upper half: roof + lamp). */
+    public static final DeferredBlock<GrowTentBlock> GROW_TENT = BLOCKS.register("grow_tent",
+            () -> new GrowTentBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(1.0f)
+                    .sound(SoundType.WOOL).noOcclusion().lightLevel(s -> s.getValue(MachineBlock.LIT) ? 10 : 0)));
     public static final DeferredBlock<GrowLampBlock> GROW_LAMP = BLOCKS.register("grow_lamp",
             () -> new GrowLampBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(1.0f)
                     .sound(SoundType.LANTERN).lightLevel(s -> 15).noOcclusion()));

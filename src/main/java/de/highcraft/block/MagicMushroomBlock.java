@@ -41,6 +41,8 @@ public class MagicMushroomBlock extends BushBlock implements BonemealableBlock {
             Block.box(2, 0, 2, 14, 10, 14)
     };
 
+    private static final DustParticleOptions SPORE_DUST = new DustParticleOptions(new Vector3f(0.55f, 0.75f, 1.0f), 0.6f);
+
     public MagicMushroomBlock(Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(AGE, 0));
@@ -113,7 +115,7 @@ public class MagicMushroomBlock extends BushBlock implements BonemealableBlock {
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         // Faintly glowing spores
         if (state.getValue(AGE) == 2 && random.nextInt(4) == 0) {
-            level.addParticle(new DustParticleOptions(new Vector3f(0.55f, 0.75f, 1.0f), 0.6f),
+            level.addParticle(SPORE_DUST,
                     pos.getX() + 0.2 + random.nextDouble() * 0.6, pos.getY() + 0.4 + random.nextDouble() * 0.3,
                     pos.getZ() + 0.2 + random.nextDouble() * 0.6, 0, 0.01, 0);
         }

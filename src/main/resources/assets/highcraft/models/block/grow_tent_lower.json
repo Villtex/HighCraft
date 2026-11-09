@@ -7,8 +7,7 @@
     "zipper": "highcraft:block/tent_zipper",
     "mylar": "highcraft:block/tent_mylar",
     "frame": "highcraft:block/tent_frame",
-    "soil": "highcraft:block/tent_soil",
-    "lamp": "highcraft:block/tent_lamp"
+    "soil": "highcraft:block/tent_soil"
   },
   "elements": [
     {
@@ -67,9 +66,6 @@
         "west": {
           "texture": "#fabric"
         },
-        "up": {
-          "texture": "#fabric"
-        },
         "down": {
           "texture": "#fabric"
         }
@@ -97,9 +93,6 @@
           "texture": "#mylar"
         },
         "west": {
-          "texture": "#fabric"
-        },
-        "up": {
           "texture": "#fabric"
         },
         "down": {
@@ -130,64 +123,6 @@
         },
         "west": {
           "texture": "#mylar"
-        },
-        "up": {
-          "texture": "#fabric"
-        },
-        "down": {
-          "texture": "#fabric"
-        }
-      }
-    },
-    {
-      "from": [
-        1,
-        15,
-        0
-      ],
-      "to": [
-        15,
-        16,
-        15
-      ],
-      "faces": {
-        "north": {
-          "texture": "#fabric"
-        },
-        "south": {
-          "texture": "#fabric"
-        },
-        "up": {
-          "texture": "#fabric"
-        },
-        "down": {
-          "texture": "#mylar"
-        }
-      }
-    },
-    {
-      "from": [
-        1,
-        12.5,
-        0
-      ],
-      "to": [
-        15,
-        15,
-        1.5
-      ],
-      "faces": {
-        "north": {
-          "texture": "#zipper"
-        },
-        "south": {
-          "texture": "#fabric"
-        },
-        "east": {
-          "texture": "#fabric"
-        },
-        "west": {
-          "texture": "#fabric"
         },
         "down": {
           "texture": "#fabric"
@@ -202,7 +137,7 @@
       ],
       "to": [
         2.5,
-        12.5,
+        16,
         1
       ],
       "faces": {
@@ -216,9 +151,6 @@
           "texture": "#fabric"
         },
         "west": {
-          "texture": "#fabric"
-        },
-        "up": {
           "texture": "#fabric"
         },
         "down": {
@@ -234,7 +166,7 @@
       ],
       "to": [
         15,
-        12.5,
+        16,
         1
       ],
       "faces": {
@@ -250,72 +182,8 @@
         "west": {
           "texture": "#fabric"
         },
-        "up": {
-          "texture": "#fabric"
-        },
         "down": {
           "texture": "#fabric"
-        }
-      }
-    },
-    {
-      "from": [
-        3,
-        14.25,
-        3
-      ],
-      "to": [
-        13,
-        15,
-        13
-      ],
-      "faces": {
-        "north": {
-          "texture": "#frame"
-        },
-        "south": {
-          "texture": "#frame"
-        },
-        "east": {
-          "texture": "#frame"
-        },
-        "west": {
-          "texture": "#frame"
-        },
-        "down": {
-          "texture": "#lamp"
-        }
-      }
-    },
-    {
-      "from": [
-        2,
-        14.5,
-        7.5
-      ],
-      "to": [
-        14,
-        15,
-        8.5
-      ],
-      "faces": {
-        "north": {
-          "texture": "#frame"
-        },
-        "south": {
-          "texture": "#frame"
-        },
-        "east": {
-          "texture": "#frame"
-        },
-        "west": {
-          "texture": "#frame"
-        },
-        "up": {
-          "texture": "#frame"
-        },
-        "down": {
-          "texture": "#frame"
         }
       }
     }

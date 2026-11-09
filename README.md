@@ -2,7 +2,7 @@
 
 Grow, process and trade: five crops with volumetric 3D models, LSD from ergot, meth and ecstasy from your own drug lab,
 twelve machines and devices, lab furniture and protective gear, drug labs in villages,
-two villager professions, a quality, addiction and tolerance system, and screen effects.
+three villager professions, a quality, addiction and tolerance system, and screen effects.
 Supports JEI and is compatible with Sodium and Iris.
 
 | | |
@@ -20,8 +20,8 @@ Supports JEI and is compatible with Sodium and Iris.
 ```
 
 Output in `build/libs/`:
-* `highcraft-neoforge-1.21.1-1.2.0.jar` - the mod
-* `highcraft_create-neoforge-1.21.1-1.2.0.jar` - the Create add-on (only use it together with Create and HighCraft)
+* `highcraft-neoforge-1.21.1-1.2.1.jar` - the mod
+* `highcraft_create-neoforge-1.21.1-1.2.1.jar` - the Create add-on (only use it together with Create and HighCraft)
 
 Testing in the dev environment (`-Pdevtest` additionally runs an automated screenshot scenario):
 
@@ -96,7 +96,10 @@ All chemistry is fictional game chemistry with invented ingredients.
 * **Lab blocks:** fume hood, exhaust fan, lab tiles (+ slab, stairs), hazard stripes, lab counter, chemical barrel, hazard barrel,
   gas cylinder, glassware shelf, plastic sheeting, toxic hazard sign and lab ceiling light.
 * **Village drug labs:** plains, desert, savanna, snowy and taiga villages sometimes contain a lab house in their own building style
-  with working machines, a fume hood, a crystallizer on packed ice, a loot chest and a precision scale (villagers can become dealers).
+  (timber frame with a gable roof, a snow-covered roof in snowy villages, a low mud-brick house in the savanna, a flat-roofed adobe
+  house with vigas in the desert; smoking chimney, shutters, planters, porch) with working machines, a fume hood, a crystallizer on
+  packed ice, a loot chest, a precision scale (villagers can become dealers), a drying rack outside (growers) and its own
+  chemist working at the chemical reactor.
   Frequency: config `villageLabWeight` (default 2; vanilla houses use 1-5, 0 turns village labs off).
 
 ### Item icons & 3D item models
@@ -114,7 +117,7 @@ solvent canister and tea cups also have 3D models for the hand, ground, item fra
 | **Extractor** | with solvent: resin, coca paste, raw opium |
 | **Chemistry lab** | 3 inputs: cocaine, morphine, LSD |
 | **Hydraulic press** | resin -> hashish, hemp fiber -> paper |
-| **Grow tent** | weather-independent growing with water, fertilizer and light (power, lamp or sun); the plant visibly grows inside |
+| **Grow tent** | two blocks tall; weather-independent growing with water, fertilizer and light (power, lamp or sun); the plant visibly grows inside (cannabis to full height). Hoppers and cables work on both halves |
 | **Grow lamp** | light level 15, speeds up crops up to 5 blocks below |
 | **Bong** | fill with water, pack, smoke |
 | **Precision scale** | the dealer's workstation, shows weight and quality |
@@ -137,6 +140,9 @@ All GUI machines run on **fuel** (like a furnace) or **FE power** and support ho
 ### Villagers
 * **Dealer** (workstation: precision scale) buys finished goods and sells accessories, chemicals and rare seeds.
 * **Grower** (workstation: drying rack) buys harvests and sells seeds, fertilizer, grow lamps and grow tents.
+* **Chemist** (workstation: chemical reactor; white lab coat and safety goggles) sells solvent, reagent, catalyst, precursor,
+  lab furniture, ventilation, gas mask and hazmat gear, and at master level the crystallizer and pill press; buys glass bottles,
+  coal, sugar, MDMA powder and crystals. Every village drug lab spawns one.
 
 ### Add-on "HighCraft: Create" (`highcraft_create`)
 Automate the whole processing chain with Create machines (49 recipes, all visible in Create's JEI categories):
@@ -168,6 +174,31 @@ Teas, vials and solvent also stand upright on the belt, and the mechanical harve
 * **Large modpacks:** tested in a 200+ mod Fantasy pack (ModernFix, More Culling, Sinytra Connector, Sable/Veil, FancyMenu, Sodium 0.8, Iris 1.8).
 
 ## Changelog
+
+### 1.2.1
+* Village drug labs redesigned following common building guidelines (shape before detail, depth, small palette, roof overhang):
+  9 x 9 timber-frame body on a stone plinth with a sloped skirt, gable roof facing the street with a one-block overhang and corbels,
+  windows on all sides with trapdoor shutters and stair sills, planters and a porch with awning and lanterns, a stepped chimney with
+  campfire smoke above the fume hood, an exposed roof truss with pendant lab lights inside, a central lab bench and a drying rack
+  (grower job site) behind the house. Each village type has its own palette and roof (snow-covered in snowy villages, low slab roof
+  with mud bricks in the savanna, flat roof with parapet, cornice and vigas in the desert). The piece stays 11 x 11 (vanilla
+  medium-house size) so it still fits between the other village pieces.
+* New villager profession **Chemist** (job site: chemical reactor) with 20 trades over five levels; every village lab spawns one.
+* The **grow tent is now two blocks tall** (new model with roof and lamp in the upper half); a mature cannabis plant grows to full
+  height inside. Placing needs a free block above, breaking either half removes the whole tent, and hoppers, pipes, cables and
+  comparators work on both halves. Tents from older worlds get their roof automatically if there is room above.
+* Performance: machines no longer call `setChanged()` every tick (that notified all six neighbours - pipes and cables of other mods
+  react to it); the processing machines cache recipe, slot assignment and result instead of matching every tick; the drying rack
+  caches its recipes per slot and checks sky/rain/biome once per second instead of every 2 ticks; hopper inserts validate once instead
+  of twice; crop hitboxes, particle options and the grow tent plant are no longer rebuilt on every call; the client skips all drug
+  effect work while sober.
+* Fix: shift-clicking more of an ingredient onto a partial stack (e.g. 1 resin in the press, the recipe needs 2) didn't start the
+  machine - the menu merged the stack in place without notifying it.
+* Fix: grow tent harvests and chemical reactor quality upgrades that didn't fit the output slots were deleted; they now stay in the
+  machine or pop out.
+* `/reload` now refreshes the recipes cached in running machines.
+* Fix: the effects added in 1.2.0 (Meth High, Euphoria, Comedown, Toxic Fumes) showed a missing texture (black/magenta) as their
+  icon - they now have their own icons.
 
 ### 1.2.0
 * New: **meth** and **ecstasy** with their own production chain (fictional in-game chemistry), three new machines (chemical reactor,

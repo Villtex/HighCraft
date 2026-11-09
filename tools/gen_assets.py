@@ -46,6 +46,21 @@ def box(frm, to, tex, faces=None, rot=None, shade=True, uvs=None):
     if not shade: e['shade'] = False
     return e
 
+def default_uv(e, d):
+    """Minecraft's automatic face UV (BlockElement#uvsByFace) for element e and face d."""
+    (x1, y1, z1), (x2, y2, z2) = e['from'], e['to']
+    return {'down': [x1, 16 - z2, x2, 16 - z1], 'up': [x1, z1, x2, z2], 'north': [16 - x2, 16 - y2, 16 - x1, 16 - y1],
+            'south': [x1, 16 - y2, x2, 16 - y1], 'west': [z1, 16 - y2, z2, 16 - y1], 'east': [16 - z2, 16 - y2, 16 - z1, 16 - y1]}[d]
+
+def shift_y(e, dy):
+    """Copy of element e moved up by dy pixels; UVs are pinned first so the texture mapping doesn't change."""
+    faces = {d: {**f, 'uv': f.get('uv', default_uv(e, d))} for d, f in e['faces'].items()}
+    out = {**e, 'from': [e['from'][0], e['from'][1] + dy, e['from'][2]], 'to': [e['to'][0], e['to'][1] + dy, e['to'][2]], 'faces': faces}
+    if 'rotation' in e:
+        o = e['rotation']['origin']
+        out['rotation'] = {**e['rotation'], 'origin': [o[0], o[1] + dy, o[2]]}
+    return out
+
 def cross(tex, h=16, size=16, shade=False):
     """Two diagonal planes like vanilla 'cross'."""
     m = (16 - size) / 2
@@ -442,25 +457,56 @@ def gen_machines():
               els, parent='minecraft:block/block')
     facing_states('press', {'false': 'press', 'true': 'press_on'}); block_item('press')
 
-    # ---- Grow tent (front open to the north) ----
-    for lit in (False, True):
-        els = [
-            box([0.5, 0, 0.5], [15.5, 1, 15.5], {'north': 'frame', 'south': 'frame', 'east': 'frame', 'west': 'frame', 'up': 'soil', 'down': 'frame'}),
-            box([0, 0, 15], [16, 16, 16], {'south': 'fabric', 'north': 'mylar', 'east': 'fabric', 'west': 'fabric', 'up': 'fabric', 'down': 'fabric'}),
-            box([0, 0, 0], [1, 16, 15], {'west': 'fabric', 'east': 'mylar', 'north': 'fabric', 'south': 'fabric', 'up': 'fabric', 'down': 'fabric'}),
-            box([15, 0, 0], [16, 16, 15], {'east': 'fabric', 'west': 'mylar', 'north': 'fabric', 'south': 'fabric', 'up': 'fabric', 'down': 'fabric'}),
+    # ---- Grow tent: two blocks tall, front open to the north ----
+    # Lower half: floor + walls (open top). Upper half: walls, roof, rolled-up door and the lamp.
+    # The walls meet at the seam without inner faces; the lamp (bottom at 1.875 blocks) sits above a mature cannabis plant.
+    tent_tex = {'particle': f'{NS}:block/tent_fabric', 'fabric': f'{NS}:block/tent_fabric', 'zipper': f'{NS}:block/tent_zipper',
+                'mylar': f'{NS}:block/tent_mylar', 'frame': f'{NS}:block/tent_frame', 'soil': f'{NS}:block/tent_soil'}
+    lower = [
+        box([0.5, 0, 0.5], [15.5, 1, 15.5], {'north': 'frame', 'south': 'frame', 'east': 'frame', 'west': 'frame', 'up': 'soil', 'down': 'frame'}),
+        box([0, 0, 15], [16, 16, 16], {'south': 'fabric', 'north': 'mylar', 'east': 'fabric', 'west': 'fabric', 'down': 'fabric'}),
+        box([0, 0, 0], [1, 16, 15], {'west': 'fabric', 'east': 'mylar', 'north': 'fabric', 'south': 'fabric', 'down': 'fabric'}),
+        box([15, 0, 0], [16, 16, 15], {'east': 'fabric', 'west': 'mylar', 'north': 'fabric', 'south': 'fabric', 'down': 'fabric'}),
+        box([1, 0, 0], [2.5, 16, 1], {'north': 'fabric', 'south': 'fabric', 'east': 'fabric', 'west': 'fabric', 'down': 'fabric'}),   # door flaps
+        box([13.5, 0, 0], [15, 16, 1], {'north': 'fabric', 'south': 'fabric', 'east': 'fabric', 'west': 'fabric', 'down': 'fabric'}),
+    ]
+    def tent_upper():
+        return [
+            box([0, 0, 15], [16, 16, 16], {'south': 'fabric', 'north': 'mylar', 'east': 'fabric', 'west': 'fabric', 'up': 'fabric'}),
+            box([0, 0, 0], [1, 16, 15], {'west': 'fabric', 'east': 'mylar', 'north': 'fabric', 'south': 'fabric', 'up': 'fabric'}),
+            box([15, 0, 0], [16, 16, 15], {'east': 'fabric', 'west': 'mylar', 'north': 'fabric', 'south': 'fabric', 'up': 'fabric'}),
             box([1, 15, 0], [15, 16, 15], {'up': 'fabric', 'down': 'mylar', 'north': 'fabric', 'south': 'fabric'}),
-            box([1, 12.5, 0], [15, 15, 1.5], {'north': 'zipper', 'south': 'fabric', 'down': 'fabric', 'east': 'fabric', 'west': 'fabric'}),   # rolled-up door
-            box([1, 0, 0], [2.5, 12.5, 1], 'fabric'), box([13.5, 0, 0], [15, 12.5, 1], 'fabric'),
-            box([3, 14.25, 3], [13, 15, 13], {'down': 'lamp', 'north': 'frame', 'south': 'frame', 'east': 'frame', 'west': 'frame'}),
-            box([2, 14.5, 7.5], [14, 15, 8.5], 'frame'),
+            box([1, 12.5, 0], [15, 15, 1.5], {'north': 'zipper', 'south': 'fabric', 'down': 'fabric', 'east': 'fabric', 'west': 'fabric'}),  # rolled-up door
+            box([1, 0, 0], [2.5, 12.5, 1], {'north': 'fabric', 'south': 'fabric', 'east': 'fabric', 'west': 'fabric'}),
+            box([13.5, 0, 0], [15, 12.5, 1], {'north': 'fabric', 'south': 'fabric', 'east': 'fabric', 'west': 'fabric'}),
+            box([3, 14, 3], [13, 14.75, 13], {'down': 'lamp', 'north': 'frame', 'south': 'frame', 'east': 'frame', 'west': 'frame'}),
+            box([2, 14.75, 7.5], [14, 15, 8.5], 'frame'),
         ]
-        model(f'block/grow_tent{"_on" if lit else ""}', {'particle': f'{NS}:block/tent_fabric', 'fabric': f'{NS}:block/tent_fabric',
-                                                         'zipper': f'{NS}:block/tent_zipper', 'mylar': f'{NS}:block/tent_mylar',
-                                                         'frame': f'{NS}:block/tent_frame', 'soil': f'{NS}:block/tent_soil',
-                                                         'lamp': f'{NS}:block/tent_lamp' if lit else f'{NS}:block/tent_lamp_off'},
-              els, parent='minecraft:block/block', render_type='minecraft:cutout')
-    facing_states('grow_tent', {'false': 'grow_tent', 'true': 'grow_tent_on'}); block_item('grow_tent')
+    model('block/grow_tent_lower', tent_tex, lower, parent='minecraft:block/block', render_type='minecraft:cutout')
+    for lit in (False, True):
+        model(f'block/grow_tent_upper{"_on" if lit else ""}', {**tent_tex, 'lamp': f'{NS}:block/tent_lamp' if lit else f'{NS}:block/tent_lamp_off'},
+              tent_upper(), parent='minecraft:block/block', render_type='minecraft:cutout')
+    variants = {}
+    for f, y in FACING_Y.items():
+        for half in ('lower', 'upper'):
+            for lit in ('false', 'true'):
+                m = 'grow_tent_lower' if half == 'lower' else ('grow_tent_upper_on' if lit == 'true' else 'grow_tent_upper')
+                v = {'model': f'{NS}:block/{m}'}
+                if y: v['y'] = y
+                variants[f'facing={f},half={half},lit={lit}'] = v
+    wjson('blockstates/grow_tent.json', {'variants': variants})
+    # Item: both halves in one model (y 0..32), scaled down so the tall tent fits into a slot
+    item_els = lower + [shift_y(e, 16) for e in tent_upper()]
+    model('item/grow_tent', {**tent_tex, 'lamp': f'{NS}:block/tent_lamp'}, item_els, render_type='minecraft:cutout', display={
+        'gui': {'rotation': [30, 225, 0], 'translation': [0, -3.25, 0], 'scale': [0.4, 0.4, 0.4]},
+        'ground': {'rotation': [0, 0, 0], 'translation': [0, 1.5, 0], 'scale': [0.18, 0.18, 0.18]},
+        'fixed': {'rotation': [0, 0, 0], 'translation': [0, -3.5, 0], 'scale': [0.4, 0.4, 0.4]},
+        'thirdperson_righthand': {'rotation': [75, 45, 0], 'translation': [0, 1.5, 1], 'scale': [0.25, 0.25, 0.25]},
+        'thirdperson_lefthand': {'rotation': [75, 225, 0], 'translation': [0, 1.5, 1], 'scale': [0.25, 0.25, 0.25]},
+        'firstperson_righthand': {'rotation': [0, 45, 0], 'translation': [0, 2.5, 0], 'scale': [0.22, 0.22, 0.22]},
+        'firstperson_lefthand': {'rotation': [0, 225, 0], 'translation': [0, 2.5, 0], 'scale': [0.22, 0.22, 0.22]},
+        'head': {'rotation': [0, 0, 0], 'translation': [0, 6, 0], 'scale': [0.5, 0.5, 0.5]},
+    })
 
     # ---- Grow lamp ----
     els = [
@@ -554,6 +600,9 @@ def gen_misc():
     wtex('entity/villager/profession/grower', grower, {'villager': {'hat': 'full'}})
     wtex('entity/zombie_villager/profession/dealer', dealer, {'villager': {'hat': 'partial'}})
     wtex('entity/zombie_villager/profession/grower', grower, {'villager': {'hat': 'full'}})
+    chemist = B.chemist_villager()
+    wtex('entity/villager/profession/chemist', chemist, {'villager': {'hat': 'partial'}})
+    wtex('entity/zombie_villager/profession/chemist', chemist, {'villager': {'hat': 'partial'}})
 
 def gen_shaders():
     wjson('shaders/post/drugs.json', {

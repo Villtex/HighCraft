@@ -21,6 +21,8 @@ public final class DrugVisuals {
     private static final float[] previous = new float[N];
     private static float time;
     private static float prevTime;
+    /** Cached once per tick - queried several times per frame (camera, FOV, shader, HUD). */
+    private static boolean active;
 
     private DrugVisuals() {}
 
@@ -30,11 +32,14 @@ public final class DrugVisuals {
         prevTime = time;
         time += 0.05f;
         if (time > 3600f) { time -= 3600f; prevTime -= 3600f; }
+        boolean any = false;
         for (int i = 0; i < N; i++) {
             float target = player == null ? 0 : target(player, effectFor(i));
             float rate = target > current[i] ? 0.015f : 0.008f; // fade in slowly, fade out even more slowly
             current[i] = Mth.approach(current[i], target, rate);
+            if (current[i] > 0.001f || previous[i] > 0.001f) any = true;
         }
+        active = any;
     }
 
     private static Holder<MobEffect> effectFor(int i) {
@@ -72,13 +77,12 @@ public final class DrugVisuals {
     }
 
     public static boolean anyActive() {
-        for (float v : current) if (v > 0.001f) return true;
-        for (float v : previous) if (v > 0.001f) return true;
-        return false;
+        return active;
     }
 
     public static void reset() {
         java.util.Arrays.fill(current, 0);
         java.util.Arrays.fill(previous, 0);
+        active = false;
     }
 }

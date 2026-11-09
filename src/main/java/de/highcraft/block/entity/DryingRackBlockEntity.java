@@ -18,6 +18,7 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -28,9 +29,22 @@ import java.util.Optional;
 
 public class DryingRackBlockEntity extends BlockEntity {
     public static final int SLOTS = 4;
+    /** How often (ticks) the surroundings (sky, rain, biome) are re-checked. */
+    private static final int SPEED_INTERVAL = 20;
+
     private final NonNullList<ItemStack> items = NonNullList.withSize(SLOTS, ItemStack.EMPTY);
     private final int[] progress = new int[SLOTS];
     private final int[] total = new int[SLOTS];
+
+    // Per-slot recipe cache, keyed by the identity of the stack it was looked up for -
+    // a replaced slot (or a /reload) automatically triggers a new lookup.
+    @SuppressWarnings("unchecked")
+    private final RecipeHolder<MachineRecipe>[] slotRecipes = new RecipeHolder[SLOTS];
+    private final ItemStack[] slotRecipeKeys = new ItemStack[SLOTS];
+    @Nullable
+    private RecipeManager cachedRecipeManager;
+    private int cachedSpeed;
+    private int speedTimer;
 
     private final IItemHandler automation = new IItemHandler() {
         @Override public int getSlots() { return SLOTS; }
@@ -53,7 +67,7 @@ public class DryingRackBlockEntity extends BlockEntity {
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             ItemStack s = items.get(slot);
-            if (s.isEmpty() || amount <= 0 || canDry(s)) return ItemStack.EMPTY;
+            if (s.isEmpty() || amount <= 0 || isDrying(slot)) return ItemStack.EMPTY;
             if (!simulate) {
                 items.set(slot, ItemStack.EMPTY);
                 changed();
@@ -81,6 +95,28 @@ public class DryingRackBlockEntity extends BlockEntity {
         return level.getRecipeManager().getRecipeFor(ModRecipes.DRYING.get(), new MachineRecipeInput(List.of(stack)), level);
     }
 
+    /** Cached drying recipe of the item hanging in {@code slot} (null = empty or already dried). */
+    @Nullable
+    private RecipeHolder<MachineRecipe> slotRecipe(int slot) {
+        if (level == null) return null;
+        RecipeManager recipes = level.getRecipeManager();
+        if (recipes != cachedRecipeManager) {
+            cachedRecipeManager = recipes;
+            java.util.Arrays.fill(slotRecipeKeys, null);
+        }
+        ItemStack stack = items.get(slot);
+        if (slotRecipeKeys[slot] != stack) {
+            slotRecipeKeys[slot] = stack;
+            slotRecipes[slot] = recipeFor(stack).orElse(null);
+        }
+        return slotRecipes[slot];
+    }
+
+    /** True if the item in the slot still needs drying. */
+    private boolean isDrying(int slot) {
+        return slotRecipe(slot) != null;
+    }
+
     public boolean canDry(ItemStack stack) {
         return recipeFor(stack).isPresent();
     }
@@ -102,7 +138,7 @@ public class DryingRackBlockEntity extends BlockEntity {
     /** Prefers finished dried goods, otherwise takes the most recently hung part. */
     public ItemStack takeItem() {
         for (int i = 0; i < SLOTS; i++) {
-            if (!items.get(i).isEmpty() && !canDry(items.get(i))) return remove(i);
+            if (!items.get(i).isEmpty() && !isDrying(i)) return remove(i);
         }
         for (int i = SLOTS - 1; i >= 0; i--) {
             if (!items.get(i).isEmpty()) return remove(i);
@@ -138,33 +174,45 @@ public class DryingRackBlockEntity extends BlockEntity {
         return Math.max(1, s);
     }
 
+    private boolean isEmpty() {
+        for (ItemStack s : items) if (!s.isEmpty()) return false;
+        return true;
+    }
+
     public void serverTick() {
-        if (level == null || level.getGameTime() % 2 != 0) return;
-        int speed = speed();
+        if (level == null || level.getGameTime() % 2 != 0 || isEmpty()) return;
+        if (--speedTimer <= 0) {
+            speedTimer = SPEED_INTERVAL / 2; // serverTick only runs every 2nd tick
+            cachedSpeed = speed();
+        }
+        int speed = cachedSpeed;
         if (speed == 0) return;
         boolean dirty = false;
+        boolean progressed = false;
         for (int i = 0; i < SLOTS; i++) {
             ItemStack stack = items.get(i);
             if (stack.isEmpty()) continue;
-            Optional<RecipeHolder<MachineRecipe>> r = recipeFor(stack);
-            if (r.isEmpty()) continue;
-            total[i] = r.get().value().processingTime();
+            RecipeHolder<MachineRecipe> r = slotRecipe(i);
+            if (r == null) continue;
+            total[i] = r.value().processingTime();
             progress[i] += speed;
+            progressed = true;
             if (progress[i] >= total[i]) {
-                ItemStack result = r.get().value().result().copy();
+                ItemStack result = r.value().result().copy();
                 int q = Quality.get(stack);
                 if (q > 0) Quality.set(result, q);
                 items.set(i, result);
                 progress[i] = 0;
                 total[i] = 0;
                 dirty = true;
-            } else if (progress[i] % 40 == 0) {
-                setChanged();
             }
         }
         if (dirty) {
             level.playSound(null, worldPosition, SoundEvents.GRASS_BREAK, SoundSource.BLOCKS, 0.4f, 1.6f);
             changed();
+        } else if (progressed) {
+            // Progress only: mark for saving without neighbour updates (see AbstractMachineBlockEntity#markUnsaved)
+            level.blockEntityChanged(worldPosition);
         }
     }
 

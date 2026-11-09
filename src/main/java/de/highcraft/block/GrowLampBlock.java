@@ -30,6 +30,8 @@ public class GrowLampBlock extends BaseEntityBlock {
     public static final MapCodec<GrowLampBlock> CODEC = simpleCodec(GrowLampBlock::new);
     private static final VoxelShape SHAPE = Shapes.or(Block.box(1, 12, 1, 15, 14, 15), Block.box(7, 14, 7, 9, 16, 9));
 
+    private static final DustParticleOptions LAMP_DUST = new DustParticleOptions(new Vector3f(0.85f, 0.35f, 1.0f), 0.5f);
+
     public GrowLampBlock(Properties properties) {
         super(properties);
     }
@@ -58,7 +60,7 @@ public class GrowLampBlock extends BaseEntityBlock {
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         if (random.nextInt(5) == 0) {
-            level.addParticle(new DustParticleOptions(new Vector3f(0.85f, 0.35f, 1.0f), 0.5f),
+            level.addParticle(LAMP_DUST,
                     pos.getX() + 0.15 + random.nextDouble() * 0.7, pos.getY() + 0.7, pos.getZ() + 0.15 + random.nextDouble() * 0.7, 0, -0.02, 0);
         }
     }

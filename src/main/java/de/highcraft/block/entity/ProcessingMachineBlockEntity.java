@@ -10,6 +10,7 @@ import de.highcraft.recipe.MachineRecipeInput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,11 +27,25 @@ import java.util.List;
  *     possible accidents and lower quality.</li>
  *     <li>Crystallizer: uses coolant (ice) instead of fuel, or runs on passive cold (ice next to it, cold biome).</li>
  * </ul>
+ * The recipe, the slot assignment, the predicted result and the output space are cached and only recomputed
+ * when a slot changes, the lab conditions change or the recipes are reloaded - a running machine does no
+ * recipe matching and no allocations per tick. {@link #craft} re-validates everything before it consumes inputs.
  */
 public class ProcessingMachineBlockEntity extends AbstractMachineBlockEntity {
+    // Recipe lookup + slot assignment: refreshed when an input slot changes or the recipes are reloaded
     @Nullable
     private RecipeHolder<MachineRecipe> cachedRecipe;
+    @Nullable
+    private int[] cachedMatch;
+    @Nullable
+    private RecipeManager cachedRecipeManager;
     private boolean recipeDirty = true;
+    // Predicted result + output space: refreshed when any slot or the lab conditions change
+    private ItemStack cachedResult = ItemStack.EMPTY;
+    private boolean cachedCanRun;
+    private boolean outputDirty = true;
+    private int cachedConditions = -1;
+
     /** Reactor: 1 = ventilated; crystallizer: 0 warm, 1 cold, 2 deep cold (3 = coolant running, see getDataValue). */
     private int environment = -1;
     private int envTimer;
@@ -55,6 +70,7 @@ public class ProcessingMachineBlockEntity extends AbstractMachineBlockEntity {
     @Override
     protected void onInventoryChanged(int slot) {
         if (slot < machine.inputCount()) recipeDirty = true;
+        outputDirty = true;
     }
 
     private List<ItemStack> inputs() {
@@ -63,21 +79,33 @@ public class ProcessingMachineBlockEntity extends AbstractMachineBlockEntity {
         return list;
     }
 
-    @Nullable
-    private RecipeHolder<MachineRecipe> findRecipe() {
-        if (level == null) return null;
-        if (recipeDirty) {
-            MachineRecipeInput input = new MachineRecipeInput(inputs());
-            cachedRecipe = level.getRecipeManager().getRecipeFor(machine.kind.type(), input, level, cachedRecipe).orElse(null);
-            recipeDirty = false;
+    private void refreshRecipe() {
+        RecipeManager recipes = level.getRecipeManager();
+        if (recipes != cachedRecipeManager) {
+            // /reload creates a new RecipeManager - the cached holder may be outdated
+            cachedRecipeManager = recipes;
+            cachedRecipe = null;
+            recipeDirty = true;
         }
-        return cachedRecipe;
+        if (!recipeDirty) return;
+        recipeDirty = false;
+        outputDirty = true;
+        List<ItemStack> inputs = inputs();
+        cachedRecipe = recipes.getRecipeFor(machine.kind.type(), new MachineRecipeInput(inputs), level, cachedRecipe).orElse(null);
+        cachedMatch = cachedRecipe == null ? null : cachedRecipe.value().match(inputs);
+    }
+
+    /** Lab conditions that change the predicted quality (see {@link #predictResult}). */
+    private int conditions() {
+        if (machine == MachineType.REACTOR) return environment;
+        if (machine == MachineType.CRYSTALLIZER) return environment >= 2 || burnTime > 0 ? 1 : 0;
+        return 0;
     }
 
     /** Result including the carried-over quality (and lab conditions for reactor / crystallizer). */
     private ItemStack predictResult(MachineRecipe recipe, int[] match) {
         ItemStack result = recipe.result().copy();
-        List<ItemStack> used = new ArrayList<>();
+        List<ItemStack> used = new ArrayList<>(match.length);
         for (int slot : match) used.add(inventory.getStackInSlot(slot));
         int q = Quality.average(used);
         if (machine == MachineType.REACTOR) {
@@ -99,7 +127,6 @@ public class ProcessingMachineBlockEntity extends AbstractMachineBlockEntity {
     }
 
     private void updateEnvironment() {
-        if (level == null) return;
         if (environment >= 0 && --envTimer > 0) return;
         envTimer = 40;
         if (machine == MachineType.REACTOR) environment = LabSafety.isVentilated(level, worldPosition) ? 1 : 0;
@@ -111,10 +138,15 @@ public class ProcessingMachineBlockEntity extends AbstractMachineBlockEntity {
     public void serverTick() {
         if (level == null) return;
         updateEnvironment();
-        RecipeHolder<MachineRecipe> holder = findRecipe();
-        int[] match = holder == null ? null : holder.value().match(inputs());
-        ItemStack result = match == null ? ItemStack.EMPTY : predictResult(holder.value(), match);
-        boolean canRun = match != null && insertOutput(result, true);
+        refreshRecipe();
+        int conditions = conditions();
+        if (outputDirty || conditions != cachedConditions) {
+            outputDirty = false;
+            cachedConditions = conditions;
+            cachedResult = cachedMatch == null ? ItemStack.EMPTY : predictResult(cachedRecipe.value(), cachedMatch);
+            cachedCanRun = cachedMatch != null && canFitOutput(cachedResult);
+        }
+        boolean canRun = cachedCanRun;
         int ept = HighCraftConfig.MACHINE_ENERGY_PER_TICK.get();
 
         boolean powered = false;
@@ -140,7 +172,10 @@ public class ProcessingMachineBlockEntity extends AbstractMachineBlockEntity {
                 }
             }
         }
-        if (burnTime > 0) burnTime--;
+        if (burnTime > 0) {
+            burnTime--;
+            markUnsaved();
+        }
 
         if (canRun && powered && machine == MachineType.REACTOR && environment == 0
                 && level.getGameTime() % 40 == 0 && level instanceof ServerLevel server) {
@@ -148,28 +183,41 @@ public class ProcessingMachineBlockEntity extends AbstractMachineBlockEntity {
         }
 
         if (canRun && powered) {
-            maxProgress = Math.max(1, holder.value().processingTime());
+            maxProgress = Math.max(1, cachedRecipe.value().processingTime());
             progress++;
             if (progress >= maxProgress) {
-                craft(holder.value(), match, result);
+                craft(cachedRecipe.value());
                 progress = 0;
             }
-            setChanged();
+            markUnsaved();
         } else if (progress > 0 && !canRun) {
             progress = Math.max(0, progress - 2);
-            setChanged();
+            markUnsaved();
         }
         setLit(burnTime > 0 || (canRun && powered));
     }
 
-    private void craft(MachineRecipe recipe, int[] match, ItemStack result) {
+    private void craft(MachineRecipe recipe) {
+        // The per-tick state is cached - re-validate against the actual slots before consuming anything
+        int[] match = recipe.match(inputs());
+        if (match == null) {
+            recipeDirty = true;
+            return;
+        }
+        ItemStack result = predictResult(recipe, match);
+        if (!canFitOutput(result)) {
+            outputDirty = true;
+            return;
+        }
         boolean ruined = false;
         if (machine == MachineType.REACTOR && level instanceof ServerLevel server) {
             if (environment == 0 && HighCraftConfig.LAB_ACCIDENTS.get() && server.random.nextFloat() < 0.08f) {
                 LabSafety.accident(server, worldPosition);
                 ruined = true;
             } else if (Quality.has(result) && server.random.nextFloat() < 0.25f) {
-                result = Quality.set(result.copy(), Math.min(5, Quality.get(result) + 1));
+                ItemStack better = Quality.set(result.copy(), Math.min(5, Quality.get(result) + 1));
+                // A different quality doesn't stack with the output - only upgrade if it still fits
+                if (canFitOutput(better)) result = better;
             }
         }
         for (int i = 0; i < match.length; i++) {
@@ -179,7 +227,6 @@ public class ProcessingMachineBlockEntity extends AbstractMachineBlockEntity {
             stack.shrink(recipe.sizedIngredients().get(i).count());
             inventory.setStackInSlot(slot, stack.isEmpty() && !remainder.isEmpty() ? remainder : stack);
         }
-        if (!ruined) insertOutput(result, false);
-        recipeDirty = true;
+        if (!ruined) dropOverflow(insertOutput(result));
     }
 }
