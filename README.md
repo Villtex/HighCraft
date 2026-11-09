@@ -96,7 +96,9 @@ All chemistry is fictional game chemistry with invented ingredients.
 * **Lab blocks:** fume hood, exhaust fan, lab tiles (+ slab, stairs), hazard stripes, lab counter, chemical barrel, hazard barrel,
   gas cylinder, glassware shelf, plastic sheeting, toxic hazard sign and lab ceiling light.
 * **Village drug labs:** plains, desert, savanna, snowy and taiga villages sometimes contain a lab house in their own building style
-  with working machines, a fume hood, a crystallizer on packed ice, a loot chest and a precision scale (villagers can become dealers).
+  (timber frame with a gable roof, a snow-covered roof in snowy villages, a low mud-brick house in the savanna, a flat-roofed adobe
+  house with vigas in the desert; smoking chimney, shutters, planters, porch) with working machines, a fume hood, a crystallizer on
+  packed ice, a loot chest, a precision scale (villagers can become dealers) and a drying rack outside (growers).
   Frequency: config `villageLabWeight` (default 2; vanilla houses use 1-5, 0 turns village labs off).
 
 ### Item icons & 3D item models
@@ -168,6 +170,14 @@ Teas, vials and solvent also stand upright on the belt, and the mechanical harve
 * **Large modpacks:** tested in a 200+ mod Fantasy pack (ModernFix, More Culling, Sinytra Connector, Sable/Veil, FancyMenu, Sodium 0.8, Iris 1.8).
 
 ## Changelog
+
+### 1.2.1
+* Village drug labs redesigned following common building guidelines (shape before detail, depth, small palette, roof overhang):
+  9 x 11 timber-frame body on a stone plinth with a sloped skirt, gable roof facing the street with a one-block overhang and corbels,
+  recessed windows with trapdoor shutters and stair sills, planters and a porch with awning and lanterns, a stepped chimney with
+  campfire smoke above the fume hood, an exposed roof truss with pendant lab lights inside, a central lab bench and a drying rack
+  (grower job site) behind the house. Each village type has its own palette and roof (snow-covered in snowy villages, low slab roof
+  with mud bricks in the savanna, flat roof with parapet, cornice and vigas in the desert).
 
 ### 1.2.0
 * New: **meth** and **ecstasy** with their own production chain (fictional in-game chemistry), three new machines (chemical reactor,

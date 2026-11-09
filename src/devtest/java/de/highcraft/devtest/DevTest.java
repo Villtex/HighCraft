@@ -190,6 +190,7 @@ public class DevTest {
         if ("iris".equals(System.getProperty("highcraft.devtest.only"))) { irisTest(); return; }
         if ("create".equals(System.getProperty("highcraft.devtest.only"))) { createTest(); return; }
         if ("lab".equals(System.getProperty("highcraft.devtest.only"))) { labTest(); return; }
+        if ("structures".equals(System.getProperty("highcraft.devtest.only"))) { structureTest(); return; }
         step(140, mc -> tp(mc, 7.5, Y + 6.5, -7.0, 0f, 32f));
         waitUntil(mc -> mc.player.getY() > Y + 2);
         step(60, mc -> {});
@@ -480,10 +481,10 @@ public class DevTest {
         step(5, mc -> cmd(mc, "effect clear Dev"));
         // village lab template
         step(10, mc -> { mc.options.hideGui = true; cmd(mc, "place template highcraft:village/plains/drug_lab 2 " + Y + " 28"); });
-        step(20, mc -> tp(mc, -3.0, Y + 1.0, 32.5, -90f, 5f));
-        waitUntil(mc -> mc.level.getBlockState(new BlockPos(10, Y + 1, 30)).is(ModBlocks.CHEMICAL_REACTOR.get()));
+        step(20, mc -> tp(mc, -6.0, Y + 2.0, 33.5, -90f, 8f));
+        waitUntil(mc -> mc.level.getBlockState(new BlockPos(13, Y + 2, 35)).is(ModBlocks.CHEMICAL_REACTOR.get()));
         step(60, mc -> shot(mc, "89_village_lab_outside"));
-        step(5, mc -> tp(mc, 3.6, Y + 1.0, 32.5, -90f, 12f));
+        step(5, mc -> tp(mc, 5.6, Y + 2.0, 33.5, -90f, 12f));
         step(60, mc -> shot(mc, "90_village_lab_inside"));
         // real villages: how often does a lab spawn?
         final int[] found = new int[2];
@@ -559,6 +560,141 @@ public class DevTest {
                 "INPUT".equals(role) ? mezz.jei.api.recipe.RecipeIngredientRole.INPUT : mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT,
                 mezz.jei.api.constants.VanillaTypes.ITEM_STACK, new ItemStack(item));
         rt.getRecipesGui().show(focus);
+    }
+
+    // ------------------------------------------------------------------ village lab templates
+    /** Places the five village lab templates side by side and screenshots each from outside (front + back) and inside. */
+    private void structureTest() {
+        final String[] types = de.highcraft.world.VillageLabs.VILLAGE_TYPES;
+        final int gap = 22, x0 = 0, z0 = 0;
+        step(10, mc -> {
+            cmd(mc, "effect clear Dev");
+            cmd(mc, "gamemode spectator Dev");
+            for (int zs = -12; zs < z0 + gap * types.length + 12; zs += 16) {
+                int ze = zs + 15;
+                cmd(mc, "fill -24 " + (Y - 3) + " " + zs + " 40 " + (Y - 1) + " " + ze + " minecraft:dirt");
+                cmd(mc, "fill -24 " + Y + " " + zs + " 40 " + Y + " " + ze + " minecraft:grass_block");
+                cmd(mc, "fill -24 " + (Y + 1) + " " + zs + " 40 " + (Y + 18) + " " + ze + " minecraft:air");
+            }
+        });
+        for (int i = 0; i < types.length; i++) {
+            final int zi = z0 + i * gap;
+            final String t = types[i];
+            // placed like a village piece: known shape (no neighbour updates), jigsaws replaced by their final state
+            step(10, mc -> {
+                MinecraftServer server = mc.getSingleplayerServer();
+                server.execute(() -> server.getStructureManager().get(HighCraft.id("village/" + t + "/drug_lab")).ifPresent(tpl -> {
+                    var settings = new net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings().setKnownShape(true)
+                            .addProcessor(net.minecraft.world.level.levelgen.structure.templatesystem.JigsawReplacementProcessor.INSTANCE);
+                    BlockPos pos = new BlockPos(x0, Y, zi);
+                    tpl.placeInWorld(server.overworld(), pos, pos, settings, server.overworld().getRandom(), 2);
+                }));
+            });
+            // a short dirt path in front of the entrance, like a village street
+            step(5, mc -> {
+                var size = templateSize(mc, t);
+                int door = zi + size.getZ() / 2;
+                cmd(mc, "fill " + (x0 - 6) + " " + Y + " " + (door - 1) + " " + (x0 - 1) + " " + Y + " " + (door + 1) + " minecraft:dirt_path");
+            });
+        }
+        step(40, mc -> {
+            mc.options.hideGui = true;
+            mc.options.fov().set(80);
+        });
+        for (int i = 0; i < types.length; i++) {
+            final int zi = z0 + i * gap;
+            final String t = types[i];
+            step(5, mc -> {
+                var s = templateSize(mc, t);
+                HighCraft.LOGGER.info("[DevTest] template {} size {}x{}x{}", t, s.getX(), s.getY(), s.getZ());
+                look(mc, x0 - 9.5, Y + 5.5, zi - 7.5, x0 + s.getX() * 0.5, Y + s.getY() * 0.35, zi + s.getZ() * 0.5);
+            });
+            step(70, mc -> {});
+            step(10, mc -> shot(mc, "s_" + t + "_front"));
+            step(5, mc -> {
+                var s = templateSize(mc, t);
+                look(mc, x0 + s.getX() + 7.5, Y + 7.5, zi + s.getZ() + 6.5, x0 + s.getX() * 0.5, Y + s.getY() * 0.35, zi + s.getZ() * 0.5);
+            });
+            step(50, mc -> {});
+            step(10, mc -> shot(mc, "s_" + t + "_back"));
+            step(5, mc -> {
+                var s = templateSize(mc, t);
+                mc.options.fov().set(100);
+                look(mc, x0 + 2.6, Y + 1.4, zi + 1.6, x0 + s.getX() - 2.0, Y + 1.5, zi + s.getZ() - 2.0);
+            });
+            step(50, mc -> {});
+            step(10, mc -> shot(mc, "s_" + t + "_inside"));
+            step(5, mc -> {
+                var s = templateSize(mc, t);
+                look(mc, x0 + s.getX() - 2.6, Y + 1.4, zi + s.getZ() - 2.0, x0 + 2.0, Y + 1.0, zi + 2.0);
+            });
+            step(40, mc -> {});
+            step(10, mc -> { shot(mc, "s_" + t + "_inside2"); mc.options.fov().set(80); });
+        }
+        step(5, mc -> look(mc, -26, Y + 26, -14, 6, Y, z0 + gap * 2 + 6));
+        step(80, mc -> {});
+        step(10, mc -> shot(mc, "s_overview"));
+        // real villages (jigsaw placement): up to 4 villages per type until one contains a lab, photographed from its street side
+        final BlockPos[] found = new BlockPos[types.length];
+        for (int a = 0; a < 4; a++) {
+            for (int i = 0; i < types.length; i++) {
+                final int k = i;
+                final int vx = 4000 + i * 480, vz = 4000 + a * 480;
+                step(5, mc -> { if (found[k] == null) cmd(mc, "forceload add " + (vx - 80) + " " + (vz - 80) + " " + (vx + 80) + " " + (vz + 80)); });
+                step(200, mc -> { if (found[k] == null) cmd(mc, "place structure minecraft:village_" + types[k] + " " + vx + " 64 " + vz); });
+                step(60, mc -> {
+                    if (found[k] != null) return;
+                    MinecraftServer server = mc.getSingleplayerServer();
+                    server.execute(() -> {
+                        ServerLevel lvl = server.overworld();
+                        BlockPos hit = null;
+                        for (int cx = (vx - 96) >> 4; cx <= (vx + 96) >> 4 && hit == null; cx++)
+                            for (int cz = (vz - 96) >> 4; cz <= (vz + 96) >> 4 && hit == null; cz++) {
+                                var chunk = lvl.getChunk(cx, cz);
+                                for (int x = 0; x < 16 && hit == null; x++)
+                                    for (int z = 0; z < 16 && hit == null; z++) {
+                                        int top = chunk.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, x, z);
+                                        for (int y = top - 12; y <= top; y++) {
+                                            BlockPos bp = new BlockPos(cx * 16 + x, y, cz * 16 + z);
+                                            if (chunk.getBlockState(bp).is(ModBlocks.CHEMICAL_REACTOR.get())) { hit = bp; break; }
+                                        }
+                                    }
+                            }
+                        HighCraft.LOGGER.info("[DevTest] village {} #{} at {} {}: lab {}", types[k], k, vx, vz, hit == null ? "-" : hit.toShortString());
+                        if (hit != null) found[k] = hit;
+                    });
+                });
+            }
+        }
+        for (int i = 0; i < types.length; i++) {
+            final int k = i;
+            step(10, mc -> {
+                BlockPos r = found[k];
+                if (r == null) return;
+                cmd(mc, "forceload add " + (r.getX() - 32) + " " + (r.getZ() - 32) + " " + (r.getX() + 32) + " " + (r.getZ() + 32));
+                // the reactor faces the entrance; template z+ is the counter-clockwise side of that direction
+                Direction front = mc.level.getBlockState(r).getValue(de.highcraft.block.MachineBlock.FACING);
+                Direction side = front.getCounterClockWise();
+                Vec3 c = Vec3.atCenterOf(r).add(front.getStepX() * 4.5 - side.getStepX() * 2.0, 2.0, front.getStepZ() * 4.5 - side.getStepZ() * 2.0);
+                look(mc, c.x + front.getStepX() * 15 - side.getStepX() * 11, c.y + 7, c.z + front.getStepZ() * 15 - side.getStepZ() * 11, c.x, c.y, c.z);
+            });
+            step(300, mc -> {});
+            step(10, mc -> { if (found[k] != null) shot(mc, "s_village_" + types[k]); });
+        }
+        step(20, mc -> mc.stop());
+    }
+
+    private static net.minecraft.core.Vec3i templateSize(Minecraft mc, String type) {
+        return mc.getSingleplayerServer().getStructureManager()
+                .get(HighCraft.id("village/" + type + "/drug_lab")).map(t -> t.getSize()).orElse(new net.minecraft.core.Vec3i(10, 6, 9));
+    }
+
+    /** Teleports the camera to (x,y,z) (eye position) looking at (tx,ty,tz). */
+    private static void look(Minecraft mc, double x, double y, double z, double tx, double ty, double tz) {
+        double dx = tx - x, dy = ty - y, dz = tz - z;
+        float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
+        float pitch = (float) -Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)));
+        tp(mc, x, y - 1.62, z, yaw, pitch);
     }
 
     private void handTest() {
