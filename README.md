@@ -173,11 +173,12 @@ Teas, vials and solvent also stand upright on the belt, and the mechanical harve
 
 ### 1.2.1
 * Village drug labs redesigned following common building guidelines (shape before detail, depth, small palette, roof overhang):
-  9 x 11 timber-frame body on a stone plinth with a sloped skirt, gable roof facing the street with a one-block overhang and corbels,
-  recessed windows with trapdoor shutters and stair sills, planters and a porch with awning and lanterns, a stepped chimney with
+  9 x 9 timber-frame body on a stone plinth with a sloped skirt, gable roof facing the street with a one-block overhang and corbels,
+  windows on all sides with trapdoor shutters and stair sills, planters and a porch with awning and lanterns, a stepped chimney with
   campfire smoke above the fume hood, an exposed roof truss with pendant lab lights inside, a central lab bench and a drying rack
   (grower job site) behind the house. Each village type has its own palette and roof (snow-covered in snowy villages, low slab roof
-  with mud bricks in the savanna, flat roof with parapet, cornice and vigas in the desert).
+  with mud bricks in the savanna, flat roof with parapet, cornice and vigas in the desert). The piece stays 11 x 11 (vanilla
+  medium-house size) so it still fits between the other village pieces.
 
 ### 1.2.0
 * New: **meth** and **ecstasy** with their own production chain (fictional in-game chemistry), three new machines (chemical reactor,

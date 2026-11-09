@@ -482,7 +482,7 @@ public class DevTest {
         // village lab template
         step(10, mc -> { mc.options.hideGui = true; cmd(mc, "place template highcraft:village/plains/drug_lab 2 " + Y + " 28"); });
         step(20, mc -> tp(mc, -6.0, Y + 2.0, 33.5, -90f, 8f));
-        waitUntil(mc -> mc.level.getBlockState(new BlockPos(13, Y + 2, 35)).is(ModBlocks.CHEMICAL_REACTOR.get()));
+        waitUntil(mc -> mc.level.getBlockState(new BlockPos(10, Y + 2, 35)).is(ModBlocks.CHEMICAL_REACTOR.get()));
         step(60, mc -> shot(mc, "89_village_lab_outside"));
         step(5, mc -> tp(mc, 5.6, Y + 2.0, 33.5, -90f, 12f));
         step(60, mc -> shot(mc, "90_village_lab_inside"));

@@ -1,8 +1,9 @@
 """Village drug lab structures (NBT templates) for all five village types.
 
 Design notes (common Minecraft building guidelines applied to a small workshop):
-- shape: a 9 x 11 timber-frame body with a 45 degree gable roof (low-pitched in savanna, flat with parapet in desert)
-  instead of a box; the gable faces the street and the roof overhangs one block on every side;
+- shape: a 9 x 9 timber-frame body with a 45 degree gable roof (low-pitched in savanna, flat with parapet in desert)
+  instead of a box; the gable faces the street and the roof overhangs one block on every side. The whole piece is
+  11 x 11 (about a vanilla medium house) - a larger bounding box rarely fits between the other village pieces;
 - depth: log frame (corner/door posts + wall plate), stone plinth with a sloped skirt, recessed panes with
   trapdoor shutters and stair sills, corbels under the eaves, a stepped chimney, planters and a porch awning;
 - palette: 3-4 materials per village type that match the vanilla houses (plus the lab blocks inside);
@@ -12,7 +13,7 @@ Design notes (common Minecraft building guidelines applied to a small workshop):
   window covered with plastic sheeting.
 
 Coordinates: x = depth (0 = street side, the entrance faces west), z = width, y = up.
-  x=0 entrance step + planter faces, x=1 porch / front overhang, x=2..12 walls (front gable at x=2), x=13 back overhang;
+  x=0 front overhang (entrance step, planters, awning), x=1..9 walls (front gable at x=1), x=10 back overhang;
   z=0 / z=10 eaves, z=1..9 walls (door and ridge at z=5); y=0 foundation, y=1 plinth + floor, y=2..4 walls, y=5 plate.
 The entrance jigsaw at (0,0,5) connects to the village streets like vanilla houses do. Village pieces are placed with
 "known shape", so every connecting block (panes, stairs) gets its final state here.
@@ -107,14 +108,15 @@ STYLES = {
               (S('decorated_pot', cracked=False, facing='east', waterlogged=False), None), ('sandstone', None)]),
 }
 
-SX, SZ = 14, 11                 # footprint incl. overhangs
-XF, XB, ZN, ZS, ZM = 2, 12, 1, 9, 5   # front/back wall, side walls, centre line
-POSTS_SIDE = (2, 7, 12)         # frame posts in the side walls (x)
+SX, SZ = 11, 11                 # footprint incl. overhangs
+XF, XB, ZN, ZS, ZM = 1, 9, 1, 9, 5    # front/back wall, side walls, centre line
+XM = 5                          # middle frame post / roof truss
+POSTS_SIDE = (XF, XM, XB)       # frame posts in the side walls (x)
 POSTS_FRONT = (1, 4, 6, 9)      # frame posts in the front wall (z): corners + door frame
 POSTS_BACK = (1, 5, 9)
-WIN_SIDE = ((4, 5), (9, 10))    # window columns (x) per bay, rows y=3..4
+WIN_SIDE = (3, 7)               # one 1-wide window (rows y=3..4) per bay of the side walls (x)
 WIN_FRONT = ((2, 3), (7, 8))    # (z)
-CHIMNEY_X = (9, 10, 11)         # on the z=10 side, the shaft is the middle one
+CHIMNEY_X = (6, 7, 8)           # on the z=10 side, the shaft is the middle one
 
 def parse(state):
     if '[' not in state:
@@ -201,11 +203,11 @@ def drug_lab(vtype, st):
 
     # air over the whole footprint (clears terrain), foundation below
     t.fill(0, 1, 0, SX - 1, top_y, SZ - 1, 'air')
-    t.fill(1, 0, 0, SX - 1, 0, SZ - 1, st['found'])
+    t.fill(0, 0, 0, SX - 1, 0, SZ - 1, st['found'])
 
     # plinth (y=1): under the walls and as a ring around the building; interior floor
-    t.fill(1, 1, 0, SX - 1, 1, SZ - 1, st['plinth'])
-    for i, (x, z) in enumerate(((XF, ZN), (XF, ZS), (XB, ZN), (XB, ZS), (7, ZN), (7, ZS), (XB, ZM))):
+    t.fill(0, 1, 0, SX - 1, 1, SZ - 1, st['plinth'])
+    for x, z in ((XF, ZN), (XF, ZS), (XB, ZN), (XB, ZS), (XM, ZN), (XM, ZS), (XB, ZM)):
         t.set(x, 1, z, st['plinth_alt'])
     t.fill(XF + 1, 1, ZN + 1, XB - 1, 1, ZS - 1, 'highcraft:lab_tiles')
     t.fill(XB - 2, 1, ZN + 1, XB - 2, 1, ZS - 1, 'highcraft:hazard_stripes')   # in front of the process line
@@ -237,17 +239,15 @@ def drug_lab(vtype, st):
     plastic = 'highcraft:plastic_sheeting'
     for side, zw, zo, out in ((0, ZN, 0, 'north'), (1, ZS, SZ - 1, 'south')):
         sill_facing = 'south' if side == 0 else 'north'
-        for bay, cols in enumerate(WIN_SIDE):
+        for bay, x in enumerate(WIN_SIDE):
             if side == 1 and bay == 1:
                 continue                                   # chimney
             mat = plastic if (side == 0 and bay == 1) else glass
-            for x in cols:
-                for y in (3, 4):
-                    t.set(x, y, zw, pane(mat, 'x'))
-                t.set(x, 2, zo, stairs(wood + '_stairs' if not flat else st['skirt'], sill_facing, 'top'))
-            for x in (cols[0] - 1, cols[1] + 1):
-                for y in (3, 4):
-                    t.set(x, y, zo, trapdoor(wood + '_trapdoor', out))
+            for y in (3, 4):
+                t.set(x, y, zw, pane(mat, 'x'))
+                t.set(x - 1, y, zo, trapdoor(wood + '_trapdoor', out))
+                t.set(x + 1, y, zo, trapdoor(wood + '_trapdoor', out))
+            t.set(x, 2, zo, stairs(wood + '_stairs' if not flat else st['skirt'], sill_facing, 'top'))
     for cols in WIN_FRONT:
         for z in cols:
             for y in (3, 4):
@@ -262,12 +262,11 @@ def drug_lab(vtype, st):
                 for y in (3, 4):
                     t.set(SX - 1, y, z, trapdoor(wood + '_trapdoor', 'east'))
 
-    # front: planters under the windows, porch step, door
+    # front: raised planters under the windows, porch step between two plinth blocks, door
     for cols, plants in ((WIN_FRONT[0], st['plants'][:2]), (WIN_FRONT[1], st['plants'][2:])):
         for z, p in zip(cols, plants):
-            t.set(1, 1, z, st['soil'])
-            t.set(1, 2, z, p if ':' in p else 'minecraft:' + p)
-            t.set(0, 1, z, trapdoor(wood + '_trapdoor', 'west'))
+            t.set(0, 1, z, st['soil'])
+            t.set(0, 2, z, p if ':' in p else 'minecraft:' + p)
     t.set(0, 1, ZM, stairs(st['skirt'], 'east'))
     t.set(XF, 2, ZM, door(wood + '_door', 'east', 'lower'))
     t.set(XF, 3, ZM, door(wood + '_door', 'east', 'upper'))
@@ -301,7 +300,7 @@ def drug_lab(vtype, st):
         'id': 'minecraft:jigsaw', 'name': 'minecraft:building_entrance', 'target': 'minecraft:building_entrance',
         'pool': f'minecraft:village/{vtype}/streets', 'joint': 'aligned', 'final_state': 'minecraft:' + st['found'],
         'placement_priority': 0, 'selection_priority': 0})
-    t.set(4, 1, ZM, 'minecraft:jigsaw[orientation=up_north]', {
+    t.set(3, 1, 3, 'minecraft:jigsaw[orientation=up_north]', {
         'id': 'minecraft:jigsaw', 'name': 'minecraft:bottom', 'target': 'minecraft:bottom',
         'pool': f'minecraft:village/{vtype}/villagers', 'joint': 'rollable', 'final_state': 'highcraft:lab_tiles',
         'placement_priority': 0, 'selection_priority': 0})
@@ -312,7 +311,7 @@ def build_gable_roof(t, st, prof):
     snow = st['roof'] == 'gable_snow'
     for z, elems in prof.items():
         for y, kind in elems:
-            for x in range(1, SX):
+            for x in range(0, SX):
                 if kind == 'stair_s':
                     s = stairs(rm + '_stairs', 'south')
                 elif kind == 'stair_n':
@@ -347,17 +346,17 @@ def build_gable_roof(t, st, prof):
             t.set(x, 4, SZ - 1, stairs(st['wood'] + '_stairs', 'north', 'top'))
     # porch awning over the door, lanterns, sign
     for z in (ZM - 1, ZM, ZM + 1):
-        t.set(1, 4, z, stairs(st['wood'] + '_stairs', 'east'))
-    t.set(1, 3, ZM - 1, lantern())
-    t.set(1, 3, ZM + 1, lantern())
-    t.set(1, 5, ZM, hc('hazard_sign', 'west'))
+        t.set(XF - 1, 4, z, stairs(st['wood'] + '_stairs', 'east'))
+    t.set(XF - 1, 3, ZM - 1, lantern())
+    t.set(XF - 1, 3, ZM + 1, lantern())
+    t.set(XF - 1, 5, ZM, hc('hazard_sign', 'west'))
     # interior truss: tie beam, king post (+ pendant lights hang from the ridge beam)
     ridge_y = roof_bottom(prof, ZM)
     for z in range(ZN + 1, ZS):
-        t.set(7, 5, z, log(st['post'], 'z'))
+        t.set(XM, 5, z, log(st['post'], 'z'))
     for y in range(6, ridge_y):
-        t.set(7, y, ZM, log(st['post'], 'y'))
-    for x in (4, 10):
+        t.set(XM, y, ZM, log(st['post'], 'y'))
+    for x in (XM - 2, XM + 2):
         for y in range(5, ridge_y):
             t.set(x, y, ZM, CHAIN)
     # vent pipe through the roof above the reactor
@@ -370,11 +369,11 @@ def build_flat_roof(t, st):
     sk = st['skirt']
     t.fill(XF + 1, 5, ZN + 1, XB - 1, 5, ZS - 1, st['infill'])           # roof deck = ceiling
     # cornice (upside-down stairs) all around at y=5
-    for x in range(1, SX):
+    for x in range(0, SX):
         t.set(x, 5, 0, stairs(sk, 'south', 'top'))
         t.set(x, 5, SZ - 1, stairs(sk, 'north', 'top'))
     for z in range(ZN, ZS + 1):
-        t.set(1, 5, z, stairs(sk, 'east', 'top'))
+        t.set(XF - 1, 5, z, stairs(sk, 'east', 'top'))
         t.set(SX - 1, 5, z, stairs(sk, 'west', 'top'))
     # parapet: merlons at corners / posts, slabs between
     merlon_x, merlon_z = POSTS_SIDE, (ZN, ZM, ZS)
@@ -388,62 +387,58 @@ def build_flat_roof(t, st):
     for x in POSTS_SIDE:
         t.set(x, 4, 0, log(st['viga'], 'z'))
         t.set(x, 4, SZ - 1, log(st['viga'], 'z'))
-    for z in (ZN, ZS):
-        t.set(SX - 1, 4, z, log(st['viga'], 'x'))
-    # entrance portal: projecting pillars, arch, hazard signs
+    # entrance portal: projecting pillars and arch; hazard signs on the front corners
     for z in (ZM - 1, ZM + 1):
         for y in (2, 3, 4):
-            t.set(1, y, z, st['post'])
-        t.set(1, 5, z, st['accent'])
-        t.set(0, 3, z, hc('hazard_sign', 'west'))
-    t.set(1, 4, ZM, slab('smooth_sandstone_slab', 'top'))
-    t.set(1, 5, ZM, st['accent'])
-    t.set(1, 6, ZM, slab('smooth_sandstone_slab'))
+            t.set(XF - 1, y, z, st['post'])
+        t.set(XF - 1, 5, z, st['accent'])
+    t.set(XF - 1, 4, ZM, slab('smooth_sandstone_slab', 'top'))
+    t.set(XF - 1, 5, ZM, st['accent'])
+    t.set(XF - 1, 6, ZM, slab('smooth_sandstone_slab'))
+    for z in (ZN, ZS):
+        t.set(XF - 1, 3, z, hc('hazard_sign', 'west'))
     # exhaust fan on the back wall, vent pipe on the roof
     t.set(XB + 1, 3, ZM, hc('exhaust_fan', 'east'))
     t.set(XB - 1, 6, 7, S('lightning_rod', facing='up', powered=False, waterlogged=False))
 
 def interior(t, st, prof):
-    W = 'west'
-    # process line along the back wall (x=11), facing the room
-    t.set(11, 2, 2, hc('pill_press', W, False))
-    t.set(11, 2, 3, hc('lab_counter', W))
-    t.set(11, 3, 3, hc('precision_scale', W))
-    t.set(11, 2, 4, hc('crystallizer', W, False))
-    t.set(11, 4, 4, hc('hazard_sign', W))
-    t.set(11, 2, 5, hc('lab_counter', W))
-    t.set(11, 3, 5, hc('glassware_shelf', W))
-    t.set(11, 2, 6, hc('lab_counter', W))
-    t.set(11, 3, 6, S('brewing_stand', has_bottle_0=True, has_bottle_1=False, has_bottle_2=True))
-    t.set(11, 2, 7, hc('chemical_reactor', W, False))
-    t.set(10, 4, 8, hc('exhaust_fan', 'north'))
-    t.set(11, 2, 8, hc('fume_hood', W))
-    # north side (z=2): loot chest, sink, counters under the windows, gas cylinders at the post
-    t.set(3, 2, 2, S('chest', facing='south', type='single', waterlogged=False),
+    W, B = 'west', XB - 1          # the process line stands in front of the back wall
+    # process line along the back wall, facing the room
+    t.set(B, 2, 2, hc('pill_press', W, False))
+    t.set(B, 2, 3, hc('lab_counter', W))
+    t.set(B, 3, 3, hc('precision_scale', W))
+    t.set(B, 2, 4, hc('crystallizer', W, False))
+    t.set(B, 4, 4, hc('hazard_sign', W))
+    t.set(B, 2, 5, hc('lab_counter', W))
+    t.set(B, 3, 5, hc('glassware_shelf', W))
+    t.set(B, 2, 6, hc('lab_counter', W))
+    t.set(B, 3, 6, S('brewing_stand', has_bottle_0=True, has_bottle_1=False, has_bottle_2=True))
+    t.set(B, 2, 7, hc('chemical_reactor', W, False))
+    t.set(B, 2, 8, hc('fume_hood', W))
+    t.set(B - 1, 4, 8, hc('exhaust_fan', 'north'))
+    # north side (z=2): loot chest, counter under the window, sink, gas cylinders at the post
+    t.set(2, 2, 2, S('chest', facing='south', type='single', waterlogged=False),
           {'id': 'minecraft:chest', 'LootTable': 'highcraft:chests/village_drug_lab'})
-    t.set(4, 2, 2, hc('lab_counter', 'south'))
-    t.set(5, 2, 2, S('water_cauldron', level=2))
-    t.set(6, 2, 2, hc('lab_counter', 'south'))
-    t.set(6, 3, 2, hc('glassware_shelf', 'south'))
-    t.set(7, 2, 2, 'highcraft:gas_cylinder')
-    t.set(8, 2, 2, 'highcraft:gas_cylinder')
-    t.set(9, 2, 2, hc('lab_counter', 'south'))
-    t.set(10, 2, 2, hc('lab_counter', 'south'))
-    # south side (z=8): lab station under the window, barrels
-    t.set(3, 2, 8, 'highcraft:chemical_barrel')
-    t.set(4, 2, 8, hc('lab_station', 'north', False))
-    t.set(5, 2, 8, hc('lab_counter', 'north'))
-    t.set(6, 2, 8, 'highcraft:hazard_barrel')
-    t.set(8, 2, 8, 'highcraft:chemical_barrel')
-    t.set(9, 2, 8, 'highcraft:hazard_barrel')
-    t.set(10, 2, 8, hc('lab_counter', 'north'))
-    t.set(10, 3, 8, hc('glassware_shelf', 'north'))
+    t.set(3, 2, 2, hc('lab_counter', 'south'))
+    t.set(4, 2, 2, S('water_cauldron', level=2))
+    t.set(4, 3, 2, hc('glassware_shelf', 'south'))
+    t.set(5, 2, 2, 'highcraft:gas_cylinder')
+    t.set(6, 2, 2, 'highcraft:gas_cylinder')
+    t.set(7, 2, 2, hc('lab_counter', 'south'))
+    # south side (z=8): lab station under the window, barrels, counter in the reactor corner
+    t.set(2, 2, 8, 'highcraft:chemical_barrel')
+    t.set(3, 2, 8, hc('lab_station', 'north', False))
+    t.set(4, 2, 8, hc('lab_counter', 'north'))
+    t.set(4, 3, 8, hc('glassware_shelf', 'north'))
+    t.set(5, 2, 8, 'highcraft:hazard_barrel')
+    t.set(6, 2, 8, 'highcraft:chemical_barrel')
+    t.set(7, 2, 8, hc('lab_counter', 'north'))
     # central lab bench
-    for x in (6, 7, 8):
-        t.set(x, 2, ZM, hc('lab_counter', 'south' if x != 7 else 'north'))
-    t.set(7, 3, ZM, S('brewing_stand', has_bottle_0=False, has_bottle_1=True, has_bottle_2=False))
+    t.set(4, 2, ZM, hc('lab_counter', 'north'))
+    t.set(5, 2, ZM, hc('lab_counter', 'south'))
+    t.set(4, 3, ZM, S('brewing_stand', has_bottle_0=False, has_bottle_1=True, has_bottle_2=False))
     # lights: under the tie beam (gable) / the ceiling (flat), pendants over the aisles
-    for x, z in ((7, 3), (7, 7), (4, ZM), (10, ZM)):
+    for x, z in ((XM, 3), (XM, 7), (XM - 2, ZM), (XM + 2, ZM)):
         t.set(x, 4, z, 'highcraft:lab_light')
 
 def exterior(t, st, prof):
@@ -458,8 +453,8 @@ def exterior(t, st, prof):
         for z in (0, SZ - 1):
             t.set(0, 1, z, S(st['leaves'], distance=1, persistent=True, waterlogged=False))
     # outdoor gas cylinders next to the chimney (z=10 side)
-    t.set(8, 1, SZ - 1, 'highcraft:gas_cylinder')
-    t.set(12, 1, SZ - 1, 'highcraft:gas_cylinder')
+    t.set(CHIMNEY_X[0] - 1, 1, SZ - 1, 'highcraft:gas_cylinder')
+    t.set(CHIMNEY_X[2] + 1, 1, SZ - 1, 'highcraft:gas_cylinder')
 
 def run(root=ROOT):
     for vtype, style in STYLES.items():
