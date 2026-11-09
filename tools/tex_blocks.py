@@ -539,6 +539,78 @@ def effect_icons():
         ".......r........",
         "....rrr.rrr.....",
         "...r.......r...."], {'k': hexc('#3a0a0a'), 'W': hexc('#f0e8e0'), 'r': hexc('#c01818')})
+    # Meth High: ice-blue crystal shard with a sparkle (effect colour #7FD6F2)
+    icons['meth_high'] = effect_icon([
+        "................",
+        ".......w........",
+        "......wBb.......",
+        "......wBb.......",
+        ".....wBBbb......",
+        ".....wBBbb...s..",
+        "....wBBBbbb.sSs.",
+        "....wBBBbbb..s..",
+        "....wBBBbbb.....",
+        "....wBBBbbb.....",
+        ".....wBBbb......",
+        ".....wBBbb......",
+        "......wBb.......",
+        "......wBb.......",
+        ".......b........",
+        "................"], {'w': hexc('#eafcff'), 'B': hexc('#7fd6f2'), 'b': hexc('#3a8fb8'), 's': hexc('#bff0ff'), 'S': hexc('#ffffff')})
+    # Euphoria: pink heart with a sparkle (effect colour #FF79C6)
+    icons['euphoria'] = effect_icon([
+        "................",
+        "...PPP...PPP....",
+        "..PwwPP.PPPPP...",
+        ".PwwPPPPPPPPPP..",
+        ".PwPPPPPPPPPpP..",
+        ".PPPPPPPPPPPpP..",
+        ".PPPPPPPPPPppP..",
+        "..PPPPPPPPppP...",
+        "...PPPPPPPpP....",
+        "....PPPPPpP.....",
+        ".....PPPpP......",
+        "......PPP.......",
+        ".......P....s...",
+        "...........sSs..",
+        "............s...",
+        "................"], {'P': hexc('#ff79c6'), 'w': hexc('#ffd6ee'), 'p': hexc('#c0408a'), 's': hexc('#fff2a0'), 'S': hexc('#ffffff')})
+    # Comedown: grey rain cloud (effect colour #4E4E6E)
+    icons['comedown'] = effect_icon([
+        "................",
+        "................",
+        "......ggg.......",
+        "....ggGGGgg.....",
+        "...gGGGGGGGg....",
+        ".ggGGGGGGGGGgg..",
+        "gGGGGGGGGGGGGGg.",
+        "gGGGGGGGGGGGGGg.",
+        ".gGGdddddddGGg..",
+        "..gggggggggggg..",
+        "................",
+        "..b...b...b.....",
+        ".b...b...b......",
+        "................",
+        "...b...b...b....",
+        "..b...b...b....."], {'g': hexc('#3a3a52'), 'G': hexc('#7a7a96'), 'd': hexc('#5a5a74'), 'b': hexc('#6a8ab0')})
+    # Toxic Fumes: green gas cloud with rising wisps (effect colour #9AC23C)
+    icons['toxic_fumes'] = effect_icon([
+        "................",
+        "....l...l...l...",
+        "...l...l...l....",
+        "....l...l...l...",
+        "...l...l...l....",
+        "..ooo.ooo.ooo...",
+        ".oLLLoLLLoLLLo..",
+        ".oLLLLLLLLLLLLo.",
+        "oLLdLLLLLLLdLLLo",
+        "oLLLLLLdLLLLLLLo",
+        "oLLLLLLLLLLLLdLo",
+        ".oLLdLLLLLLLLLo.",
+        "..ooLLLLLLLLoo..",
+        "....oooooooo....",
+        "................",
+        "................"], {'o': hexc('#4a6a1a'), 'L': hexc('#9ac23c'), 'd': hexc('#5a7a20'), 'l': hexc('#c8e88a')})
     return icons
 
 # ---------------- GUI ----------------

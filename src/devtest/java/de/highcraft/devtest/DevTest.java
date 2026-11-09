@@ -228,6 +228,7 @@ public class DevTest {
         if ("create".equals(System.getProperty("highcraft.devtest.only"))) { createTest(); return; }
         if ("lab".equals(System.getProperty("highcraft.devtest.only"))) { labTest(); return; }
         if ("tent".equals(System.getProperty("highcraft.devtest.only"))) { tentTest(); return; }
+        if ("icons".equals(System.getProperty("highcraft.devtest.only"))) { iconTest(); return; }
         step(140, mc -> tp(mc, 7.5, Y + 6.5, -7.0, 0f, 32f));
         waitUntil(mc -> mc.player.getY() > Y + 2);
         step(60, mc -> {});
@@ -617,6 +618,32 @@ public class DevTest {
             if (e.getItem().is(item)) n += e.getItem().getCount();
         }
         return n;
+    }
+
+    /** Effect icons of the 1.2.0 effects (mode "icons") - inventory side panel and HUD, tutorial toast off. */
+    private void iconTest() {
+        String[] effects = {"meth_high", "euphoria", "comedown", "toxic_fumes"};
+        step(10, mc -> {
+            mc.options.hideGui = false;
+            mc.getTutorial().setStep(net.minecraft.client.tutorial.TutorialSteps.NONE);
+            mc.getToasts().clear();
+            cmd(mc, "gamemode creative Dev"); // no fume damage
+            tp(mc, 7.5, Y + 1.0, 14.0, 0f, 10f);
+            for (String e : effects) cmd(mc, "effect give Dev highcraft:" + e + " 600 0 false");
+        });
+        step(40, mc -> {
+            for (String e : effects) {
+                var holder = net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.getHolder(HighCraft.id(e)).orElseThrow();
+                var sprite = mc.getMobEffectTextures().get(holder);
+                check("effect icon " + e, !sprite.contents().name().equals(
+                        net.minecraft.client.renderer.texture.MissingTextureAtlasSprite.getLocation()), sprite.contents().name());
+            }
+            mc.setScreen(new net.minecraft.client.gui.screens.inventory.InventoryScreen(mc.player));
+        });
+        step(30, mc -> shot(mc, "95_effect_icons_inventory"));
+        step(5, mc -> mc.setScreen(null));
+        step(30, mc -> shot(mc, "96_effect_icons_hud"));
+        step(10, mc -> { HighCraft.LOGGER.info("[DevTest] icon test done - quitting"); mc.stop(); });
     }
 
     /** Two-block grow tent + machine notification fixes (mode "tent"). */

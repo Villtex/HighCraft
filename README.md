@@ -183,6 +183,8 @@ Teas, vials and solvent also stand upright on the belt, and the mechanical harve
 * Fix: grow tent harvests and chemical reactor quality upgrades that didn't fit the output slots were deleted; they now stay in the
   machine or pop out.
 * `/reload` now refreshes the recipes cached in running machines.
+* Fix: the effects added in 1.2.0 (Meth High, Euphoria, Comedown, Toxic Fumes) showed a missing texture (black/magenta) as their
+  icon - they now have their own icons.
 
 ### 1.2.0
 * New: **meth** and **ecstasy** with their own production chain (fictional in-game chemistry), three new machines (chemical reactor,

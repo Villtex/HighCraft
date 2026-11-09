@@ -24,7 +24,7 @@ See `README.md` for features and the changelog. Current version: see `gradle.pro
 ## Build & test
 - `./gradlew build` -> `build/libs/highcraft-neoforge-1.21.1-<v>.jar` and `highcraft_create-neoforge-1.21.1-<v>.jar`.
 - Headless client: `Xvfb :99 &`, `DISPLAY=:99 LIBGL_ALWAYS_SOFTWARE=1 ./gradlew runClient -Pdevtest -PdevtestOnly=<mode>`;
-  modes: `all`, `effects`, `items`, `iris`, `create` (needs `-Puse_create_in_dev=true`), `lab`, `tent`. Screenshots land in
+  modes: `all`, `effects`, `items`, `iris`, `create` (needs `-Puse_create_in_dev=true`), `lab`, `tent`, `icons`. Screenshots land in
   `run/screenshots/hc_*.png`, results in `run/logs/latest.log` (grep `[DevTest]`). In DevTest, `step(delay, action)` runs the
   action and THEN waits `delay` ticks.
 - Optional dev mods via gradle.properties flags: `use_sodium_in_dev`, `use_iris_in_dev`, `use_create_in_dev`.
