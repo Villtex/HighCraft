@@ -620,13 +620,13 @@ public class DevTest {
             step(5, mc -> {
                 var s = templateSize(mc, t);
                 mc.options.fov().set(100);
-                look(mc, x0 + 2.6, Y + 1.4, zi + 1.6, x0 + s.getX() - 2.0, Y + 1.5, zi + s.getZ() - 2.0);
+                look(mc, x0 + 3.3, Y + 3.5, zi + 2.3, x0 + s.getX() - 2.0, Y + 2.6, zi + s.getZ() - 2.5);
             });
             step(50, mc -> {});
             step(10, mc -> shot(mc, "s_" + t + "_inside"));
             step(5, mc -> {
                 var s = templateSize(mc, t);
-                look(mc, x0 + s.getX() - 2.6, Y + 1.4, zi + s.getZ() - 2.0, x0 + 2.0, Y + 1.0, zi + 2.0);
+                look(mc, x0 + s.getX() - 3.3, Y + 3.5, zi + s.getZ() - 3.3, x0 + 2.0, Y + 2.4, zi + 2.5);
             });
             step(40, mc -> {});
             step(10, mc -> { shot(mc, "s_" + t + "_inside2"); mc.options.fov().set(80); });

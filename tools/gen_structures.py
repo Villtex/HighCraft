@@ -252,6 +252,15 @@ def drug_lab(vtype, st):
         for z in cols:
             for y in (3, 4):
                 t.set(XF, y, z, pane(glass, 'z'))
+    # back wall: same windows as the front with shutters (no sills: the back props stand below them)
+    for cols in WIN_FRONT:
+        for z in cols:
+            for y in (3, 4):
+                t.set(XB, y, z, pane(glass, 'z'))
+        if not flat:                                    # desert: the exhaust fan sits between the windows
+            for z in (cols[0] - 1, cols[1] + 1):
+                for y in (3, 4):
+                    t.set(SX - 1, y, z, trapdoor(wood + '_trapdoor', 'east'))
 
     # front: planters under the windows, porch step, door
     for cols, plants in ((WIN_FRONT[0], st['plants'][:2]), (WIN_FRONT[1], st['plants'][2:])):
@@ -407,7 +416,7 @@ def interior(t, st, prof):
     t.set(11, 2, 6, hc('lab_counter', W))
     t.set(11, 3, 6, S('brewing_stand', has_bottle_0=True, has_bottle_1=False, has_bottle_2=True))
     t.set(11, 2, 7, hc('chemical_reactor', W, False))
-    t.set(11, 4, 7, hc('exhaust_fan', W))
+    t.set(10, 4, 8, hc('exhaust_fan', 'north'))
     t.set(11, 2, 8, hc('fume_hood', W))
     # north side (z=2): loot chest, sink, counters under the windows, gas cylinders at the post
     t.set(3, 2, 2, S('chest', facing='south', type='single', waterlogged=False),
